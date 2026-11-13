@@ -199,6 +199,9 @@ daily_friend_scout = false
 # Record successful scouting draws with their account UID and rarity counts.
 scout_audit = false
 
+# Enable the friends-only mailbox with per-player send limits.
+friend_mail = false
+
 # Optional reward egg policy file relative to the server directory.
 # reward_egg_policy = "resources/events/reward_egg_policy.json"
 

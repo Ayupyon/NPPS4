@@ -18,6 +18,7 @@ if not config.is_script_mode():
     from . import exchange
     from . import friend
     from . import gdpr
+    from . import greet
     from . import handover
     from . import item
     from . import lbonus

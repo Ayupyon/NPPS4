@@ -5,6 +5,8 @@ from .. import util
 from ..db import main
 from ..system import achievement
 from ..system import common
+from ..system import friend
+from ..system import mail
 from ..system import master_challenge
 from ..system import reward
 from ..system import tutorial
@@ -206,18 +208,22 @@ async def login_topinfo(context: idol.SchoolIdolUserParams) -> TopInfoResponse:
     # TODO
     util.stub("login", "topInfo", context.raw_request_data)
     current_user = await user.get_current(context)
+    incoming = await friend.count(context, current_user.id, 2)
+    outgoing = await friend.count(context, current_user.id, 1)
+    new_friends = await friend.count_new(context, current_user.id)
+    unread_mail, latest_mail = await mail.summary(context, current_user.id)
     return TopInfoResponse(
-        friend_action_cnt=0,
-        friend_greet_cnt=0,
+        friend_action_cnt=incoming + new_friends,
+        friend_greet_cnt=unread_mail,
         friend_variety_cnt=0,
-        friend_new_cnt=0,
+        friend_new_cnt=new_friends,
         present_cnt=await reward.count_presentbox(context, current_user),
         secret_box_badge_flag=False,
         server_datetime=util.timestamp_to_datetime(),
         notice_friend_datetime=util.timestamp_to_datetime(86400),
-        notice_mail_datetime=util.timestamp_to_datetime(86400),
-        friends_approval_wait_cnt=0,
-        friends_request_cnt=0,
+        notice_mail_datetime=util.timestamp_to_datetime(latest_mail),
+        friends_approval_wait_cnt=incoming,
+        friends_request_cnt=outgoing,
         is_today_birthday=False,
         license_info=LicenseInfo(license_list=[], licensed_info=[], expired_info=[], badge_flag=False),
         using_buff_info=[],

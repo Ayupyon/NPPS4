@@ -9,6 +9,7 @@ from . import award
 from . import background
 from . import common
 from . import core
+from . import friend
 from . import item
 from . import live
 from . import master_challenge
@@ -147,7 +148,7 @@ async def find_by_key(context: idol.BasicSchoolIdolContext, key: str):
 
 
 async def find_by_invite_code(context: idol.BasicSchoolIdolContext, invite_code: int):
-    q = sqlalchemy.select(main.User).where(main.User.invite_code == invite_code).limit(1)
+    q = sqlalchemy.select(main.User).where(main.User.invite_code == f"{int(invite_code):09d}").limit(1)
     result = await context.db.main.execute(q)
     return result.scalar()
 
@@ -289,9 +290,16 @@ async def _clean_table[T: CleanupProtocol](context: idol.BasicSchoolIdolContext,
 
 
 async def delete_user(context: idol.BasicSchoolIdolContext, user_id: int):
+    await friend.lock(context)
     user_data = await get(context, user_id)
     if user_data is None:
         raise ValueError("User doesn't exist")
+    await context.db.main.execute(sqlalchemy.delete(main.DestinyFriendPair).where(friend.pair_condition(user_id)))
+    await context.db.main.execute(
+        sqlalchemy.delete(main.DestinyMail).where(
+            sqlalchemy.or_(main.DestinyMail.sender_id == user_id, main.DestinyMail.receiver_id == user_id)
+        )
+    )
     await _clean_table(context, main.DestinyRewardEggLive, user_id)
     await _clean_table(context, main.DestinyRewardEggReceipt, user_id)
     await _clean_table(context, main.DestinyRewardEgg, user_id)

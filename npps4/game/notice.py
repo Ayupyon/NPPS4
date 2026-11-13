@@ -1,9 +1,11 @@
 import pydantic
 
+from . import greet
 from .. import const
 from .. import idol
 from .. import util
 from ..system import common
+from ..system import mail
 
 from typing import Any
 
@@ -46,6 +48,21 @@ class NoticeFriendVarietyResponse(common.TimestampMixin):
     notice_list: list[NoticeFriendVariety]
 
 
+class InboxRequest(greet.MailRequest):
+    next_id: pydantic.StrictInt = pydantic.Field(default=0, ge=0, le=greet.MAX_ID)
+
+
+class HistoryRequest(greet.MailRequest):
+    is_previous: bool = True
+    notice_id: pydantic.StrictInt = pydantic.Field(default=0, ge=0, le=greet.MAX_ID)
+
+
+class MailResponse(pydantic.BaseModel):
+    notice_list: list[dict[str, Any]]
+    next_id: int = 0
+    has_next: bool = False
+
+
 @idol.register("notice", "noticeMarquee")
 async def notice_noticemarquee(context: idol.SchoolIdolUserParams) -> NoticeMarqueeResponse:
     # TODO
@@ -60,3 +77,17 @@ async def notice_noticefriendvariety(
     # TODO
     util.stub("notice", "noticeFriendVariety", request)
     return NoticeFriendVarietyResponse(item_count=0, notice_list=[])
+
+
+@idol.register("notice", "noticeFriendGreeting", batchable=False)
+async def notice_friend_greeting(context: idol.SchoolIdolUserParams, request: InboxRequest) -> MailResponse:
+    request.check()
+    notices, next_id, has_next = await mail.inbox(context, request.next_id)
+    return MailResponse(notice_list=notices, next_id=next_id, has_next=has_next)
+
+
+@idol.register("notice", "noticeUserGreetingHistory", batchable=False)
+async def notice_greeting_history(context: idol.SchoolIdolUserParams, request: HistoryRequest) -> MailResponse:
+    request.check()
+    notices, has_next = await mail.history(context, request.notice_id, request.is_previous)
+    return MailResponse(notice_list=notices, has_next=has_next)

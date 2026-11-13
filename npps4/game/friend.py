@@ -1,9 +1,10 @@
 import pydantic
+import sqlalchemy
 
 from . import models
 from .. import const
 from .. import idol
-from .. import util
+from ..db import main
 from ..system import common
 from ..system import friend
 from ..system import unit
@@ -15,6 +16,22 @@ class FriendListRequest(pydantic.BaseModel):
     type: int
     sort: int
     page: int
+
+
+class FriendUserRequest(pydantic.BaseModel):
+    user_id: int = pydantic.Field(gt=0, le=2**63 - 1)
+
+
+class FriendRespondRequest(FriendUserRequest):
+    status: int
+
+
+class FriendFlagResponse(pydantic.BaseModel):
+    is_friend: bool = False
+
+
+class FriendEmptyResponse(pydantic.RootModel[list[object]]):
+    root: list[object] = pydantic.Field(default_factory=list)
 
 
 class FriendListFriendUserData(models.UserData):
@@ -72,9 +89,113 @@ class FriendSearchResponse(common.TimestampMixin):
 
 @idol.register("friend", "list")
 async def friend_list(context: idol.SchoolIdolUserParams, request: FriendListRequest) -> FriendListResponse:
-    # TODO
-    util.stub("friend", "list", request)
-    return FriendListResponse(item_count=0, friend_list=[], new_friend_list=[])
+    if request.type not in (0, 1, 2) or request.page < 0:
+        raise idol.error.by_code(idol.error.ERROR_CODE_GAME_LOGIC_ERROR)
+    if request.type == 0:
+        await friend.lock(context)
+    current = await user.get_current(context)
+    pair = main.DestinyFriendPair
+    other_id = sqlalchemy.case((pair.user_a == current.id, pair.user_b), else_=pair.user_a)
+    order = {
+        1: main.User.level.asc(),
+        2: main.User.level.desc(),
+        9: main.User.update_date.asc(),
+        10: main.User.update_date.desc(),
+        11: pair.created_at.asc(),
+    }.get(request.sort, pair.created_at.desc())
+    item_count = await friend.count(context, current.id, request.type)
+    if request.page * 20 >= item_count:
+        return FriendListResponse(item_count=item_count, friend_list=[], new_friend_list=[])
+    query = (
+        sqlalchemy.select(pair, main.User)
+        .join(main.User, main.User.id == other_id)
+        .where(friend.list_condition(current.id, request.type))
+        .order_by(order, main.User.id)
+        .limit(20)
+        .offset(request.page * 20)
+    )
+    entries: list[FriendListFriend] = []
+    read_pairs: list[main.DestinyFriendPair] = []
+    for relationship, other in await context.db.main.execute(query):
+        center_id = await unit.get_unit_center(context, other)
+        if not center_id:
+            continue
+        card = await context.db.main.get(main.Unit, center_id)
+        if card is None or card.user_id != other.id:
+            continue
+        full, stats = await unit.get_unit_data_full_info(context, card)
+        is_new = bool(relationship.new_a if relationship.user_a == current.id else relationship.new_b)
+        entries.append(
+            FriendListFriend(
+                is_new=is_new,
+                user_data=FriendListFriendUserData(
+                    user_id=other.id,
+                    name=other.name,
+                    level=other.level,
+                    comment=other.bio,
+                    elapsed_time_from_login=friend.elapsed(other.update_date),
+                    elapsed_time_from_applied=friend.elapsed(relationship.updated_at),
+                ),
+                center_unit_info=common.CenterUnitInfo(
+                    unit_id=card.unit_id,
+                    level=full.level,
+                    rank=card.rank,
+                    love=card.love,
+                    display_rank=card.display_rank,
+                    unit_skill_exp=card.skill_exp,
+                    unit_removable_skill_capacity=card.unit_removable_skill_capacity,
+                    smile=stats.smile,
+                    cute=stats.pure,
+                    cool=stats.cool,
+                    is_love_max=full.is_love_max,
+                    is_level_max=full.is_level_max,
+                    is_rank_max=full.is_rank_max,
+                    removable_skill_ids=await unit.get_unit_removable_skills(context, card),
+                ),
+                setting_award_id=other.active_award,
+            )
+        )
+        if is_new:
+            read_pairs.append(relationship)
+    for relationship in read_pairs:
+        if relationship.user_a == current.id:
+            relationship.new_a = 0
+        else:
+            relationship.new_b = 0
+    return FriendListResponse(item_count=item_count, friend_list=entries, new_friend_list=[])
+
+
+@idol.register("friend", "request", batchable=False)
+async def friend_request(context: idol.SchoolIdolUserParams, request: FriendUserRequest) -> FriendFlagResponse:
+    return FriendFlagResponse(is_friend=await friend.request_friend(context, request.user_id))
+
+
+@idol.register("friend", "response", batchable=False)
+async def friend_response(context: idol.SchoolIdolUserParams, request: FriendRespondRequest) -> FriendEmptyResponse:
+    await friend.respond_friend(context, request.user_id, request.status)
+    return FriendEmptyResponse()
+
+
+@idol.register("friend", "requestCancel", batchable=False)
+async def friend_cancel(context: idol.SchoolIdolUserParams, request: FriendUserRequest) -> FriendFlagResponse:
+    await friend.remove_friend(
+        context,
+        request.user_id,
+        const.FRIEND_STATUS.PENDING,
+        idol.error.ERROR_CODE_FRIEND_NOT_REQUESTING_TO_SPECIFIED_USER,
+    )
+    return FriendFlagResponse()
+
+
+@idol.register("friend", "expel", batchable=False)
+async def friend_expel(context: idol.SchoolIdolUserParams, request: FriendUserRequest) -> FriendEmptyResponse:
+    await friend.remove_friend(
+        context,
+        request.user_id,
+        const.FRIEND_STATUS.FRIEND,
+        idol.error.ERROR_CODE_FRIEND_SPECIFIED_USER_IS_NOT_A_FRIEND,
+    )
+    return FriendEmptyResponse()
 
 
 @idol.register("friend", "search")
@@ -107,7 +228,7 @@ async def friend_search(context: idol.SchoolIdolUserParams, request: FriendSearc
             energy_max=target_user.energy_max,
             friend_max=target_user.friend_max,
             unit_cnt=await unit.count_units(context, target_user, True),
-            elapsed_time_from_login="Unknown",
+            elapsed_time_from_login=friend.elapsed(target_user.update_date),
             comment=target_user.bio,
         ),
         center_unit_info=FriendSearchUnitInfo(

@@ -1,9 +1,9 @@
 import pydantic
 
 from .. import idol
-from .. import util
 from ..system import advanced
 from ..system import album
+from ..system import friend
 from ..system import live
 from ..system import museum
 from ..system import profile
@@ -37,7 +37,7 @@ class ProfileUserInfo(pydantic.BaseModel):
     friend_max: int
     unit_cnt: int
     invite_code: str
-    elapsed_time_from_login: str = "unknown"  # TODO
+    elapsed_time_from_login: str
     introduction: str
 
 
@@ -98,6 +98,7 @@ async def profile_cardranking(
 
 @idol.register("profile", "profileInfo")
 async def profile_profileinfo(context: idol.SchoolIdolUserParams, request: ProfileRequest) -> ProfileInfoResponse:
+    current_user = await user.get_current(context)
     target_user = await user.get(context, request.user_id)
     if target_user is None:
         raise idol.error.by_code(idol.error.ERROR_CODE_USER_NOT_EXIST)
@@ -127,12 +128,13 @@ async def profile_profileinfo(context: idol.SchoolIdolUserParams, request: Profi
             friend_max=target_user.friend_max,
             unit_cnt=unit_count,
             invite_code=target_user.invite_code,
+            elapsed_time_from_login=friend.elapsed(target_user.update_date),
             introduction=target_user.bio,
         ),
         center_unit_info=await profile.to_profile_unit_info(context, center_unit, museum_data.parameter),
         navi_unit_info=await profile.to_profile_unit_info(context, partner_unit, museum_data.parameter),
         is_alliance=False,  # TODO
-        friend_status=0,
+        friend_status=await friend.get_friend_status(context, current_user, target_user),
         setting_award_id=target_user.active_award,
         setting_background_id=target_user.active_background,
     )

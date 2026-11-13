@@ -466,6 +466,72 @@ class DestinyRewardEggLive(common.Base, kw_only=True):
     live_difficulty_id: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(common.IDInteger)
 
 
+class DestinyFriendMutex(common.Base, kw_only=True):
+    id: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(primary_key=True, autoincrement=False)
+    revision: sqlalchemy.orm.Mapped[int]
+
+    __table_args__ = (sqlalchemy.CheckConstraint("id = 1"),)
+
+
+class DestinyFriendPair(common.Base, kw_only=True):
+    user_a: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(
+        common.IDInteger, sqlalchemy.ForeignKey(User.id, ondelete="CASCADE"), primary_key=True
+    )
+    user_b: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(
+        common.IDInteger, sqlalchemy.ForeignKey(User.id, ondelete="CASCADE"), primary_key=True
+    )
+    requester: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(common.IDInteger)
+    accepted: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(default=0, server_default="0")
+    created_at: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(common.IDInteger)
+    updated_at: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(common.IDInteger)
+    new_a: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(default=0, server_default="0")
+    new_b: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(default=0, server_default="0")
+
+    __table_args__ = (
+        sqlalchemy.CheckConstraint("user_a < user_b"),
+        sqlalchemy.CheckConstraint("requester IN (user_a, user_b)"),
+        sqlalchemy.CheckConstraint("accepted IN (0, 1)"),
+        sqlalchemy.CheckConstraint("new_a IN (0, 1)"),
+        sqlalchemy.CheckConstraint("new_b IN (0, 1)"),
+        sqlalchemy.Index("destiny_friend_b", "user_b", "accepted"),
+    )
+
+
+class DestinyMail(common.Base, kw_only=True):
+    notice_id: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(common.IDInteger, init=False, primary_key=True)
+    sender_id: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(
+        common.IDInteger, sqlalchemy.ForeignKey(User.id, ondelete="CASCADE")
+    )
+    receiver_id: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(
+        common.IDInteger, sqlalchemy.ForeignKey(User.id, ondelete="CASCADE")
+    )
+    message: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(sqlalchemy.Text)
+    created_at: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(common.IDInteger)
+    replied_notice_id: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(
+        common.IDInteger, default=0, server_default="0"
+    )
+    read_at: sqlalchemy.orm.Mapped[int | None] = sqlalchemy.orm.mapped_column(common.IDInteger, default=None)
+    reply_flag: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(default=0, server_default="0")
+    sender_deleted: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(default=0, server_default="0")
+    receiver_deleted: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(default=0, server_default="0")
+    sender_profile: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(sqlalchemy.Text)
+    receiver_profile: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(sqlalchemy.Text)
+    request_key: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.Text().with_variant(
+            sqlalchemy.dialects.mysql.VARCHAR(532, collation="utf8mb4_bin"), "mysql", "mariadb"
+        )
+    )
+    payload_hash: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(sqlalchemy.String(64))
+
+    __table_args__ = (
+        sqlalchemy.UniqueConstraint("sender_id", "request_key"),
+        sqlalchemy.Index("destiny_mail_inbox", "receiver_id", "receiver_deleted", "notice_id"),
+        sqlalchemy.Index("destiny_mail_sent", "sender_id", "sender_deleted", "notice_id"),
+        sqlalchemy.Index("destiny_mail_rate", "sender_id", "created_at"),
+        {"sqlite_autoincrement": True, "mysql_charset": "utf8mb4", "mariadb_charset": "utf8mb4"},
+    )
+
+
 class DailyFriendScout(common.Base, kw_only=True):
     user_id: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(
         common.IDInteger, sqlalchemy.ForeignKey(User.id, ondelete="CASCADE"), primary_key=True
