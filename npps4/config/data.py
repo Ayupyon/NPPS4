@@ -94,7 +94,7 @@ class _Game(pydantic.BaseModel):
     beatmaps: str = ""
     live_unit_drop: Annotated[
         str, pydantic.Field(validation_alias=pydantic.AliasChoices("live_unit_drop", "unitdrop"))
-    ] = "external/live_unit_drop.py"
+    ] = ""
     live_box_drop: Annotated[
         str, pydantic.Field(validation_alias=pydantic.AliasChoices("live_box_drop", "boxdrop"))
     ] = "external/live_box_drop.py"

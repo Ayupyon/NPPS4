@@ -176,9 +176,12 @@ def get_live_unit_drop_protocol():
     global _live_unit_drop_module
 
     if _live_unit_drop_module is None:
-        _live_unit_drop_module = cast(
-            cfgtype.LiveUnitDropProtocol, load_module_from_file(LIVE_UNIT_DROP_FILE, "external.live_unit_drop")
-        )
+        if filename := CONFIG_DATA.game.live_unit_drop:
+            _live_unit_drop_module = load_module_from_file(os.path.join(ROOT_DIR, filename), "external.live_unit_drop")
+        else:
+            from ..system import live_unit_drop
+
+            _live_unit_drop_module = live_unit_drop
 
     return _live_unit_drop_module
 

@@ -173,7 +173,7 @@ beatmaps = ""
 # Path is relative to the project root directory.
 # Note: The file path is not configurable in Android.
 # Environment Variable: NPPS4_CONFIG_GAME_UNITDROP
-live_unit_drop = "external/live_unit_drop.py"
+live_unit_drop = ""
 
 # Specify Live Show! Reward Box drop script.
 # Path is relative to the project root directory.
