@@ -16,6 +16,7 @@ from . import item
 from . import item_model
 from . import lbonus
 from . import live
+from . import master_challenge
 from . import museum
 from . import reward
 from . import scenario
@@ -172,6 +173,7 @@ async def export_user(
     if secret_key is None:
         secret_key = config.get_secret_key()
 
+    training_energy, training_energy_max = await master_challenge.get_energy(context, target)
     user_data = UserData(
         key=None if nullify_credentials else target.key,
         passwd=None if nullify_credentials else target.passwd,
@@ -189,8 +191,8 @@ async def export_user(
         license_live_energy_recoverly_time=target.license_live_energy_recoverly_time,
         energy_full_need_time=target.energy_full_need_time,
         over_max_energy=target.over_max_energy,
-        training_energy=target.training_energy,
-        training_energy_max=target.training_energy_max,
+        training_energy=training_energy,
+        training_energy_max=training_energy_max,
         friend_max=target.friend_max,
         tutorial_state=target.tutorial_state,
         active_deck_index=target.active_deck_index,

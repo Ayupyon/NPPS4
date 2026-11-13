@@ -357,8 +357,10 @@ async def get_all_normal_live_unlock(
     return result.scalars()
 
 
-async def get_live_in_progress(context: idol.BasicSchoolIdolContext, user: main.User):
+async def get_live_in_progress(context: idol.BasicSchoolIdolContext, user: main.User, *, for_update: bool = False):
     q = sqlalchemy.select(main.LiveInProgress).where(main.LiveInProgress.user_id == user.id)
+    if for_update:
+        q = q.with_for_update().execution_options(populate_existing=True)
     result = await context.db.main.execute(q)
     return result.scalar()
 
@@ -376,6 +378,8 @@ async def register_live_in_progress(
     lp_factor: int,
     unit_deck_id: int,
     deck_data_bytes: bytes,
+    *,
+    master_challenge_request_key: str | None = None,
 ):
     live_in_progress = await get_live_in_progress(context, user)
     if live_in_progress is None:
@@ -385,6 +389,7 @@ async def register_live_in_progress(
             lp_factor=lp_factor,
             unit_deck_id=unit_deck_id,
             deck_data=deck_data_bytes,
+            master_challenge_request_key=master_challenge_request_key,
         )
         context.db.main.add(wip)
     else:
@@ -392,6 +397,7 @@ async def register_live_in_progress(
         live_in_progress.lp_factor = lp_factor
         live_in_progress.unit_deck_id = unit_deck_id
         live_in_progress.deck_data = deck_data_bytes
+        live_in_progress.master_challenge_request_key = master_challenge_request_key
     await context.db.main.flush()
 
 

@@ -3,6 +3,7 @@ import hashlib
 import hmac
 
 import sqlalchemy
+import sqlalchemy.dialects.mysql
 import sqlalchemy.engine.url
 import sqlalchemy.ext.asyncio
 import sqlalchemy.orm
@@ -344,6 +345,34 @@ class LiveInProgress(common.Base, kw_only=True):
     lp_factor: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column()
     unit_deck_id: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column()
     deck_data: sqlalchemy.orm.Mapped[bytes] = sqlalchemy.orm.mapped_column()  # JSON-encoded LiveDeckInfo
+    master_challenge_request_key: sqlalchemy.orm.Mapped[str | None] = sqlalchemy.orm.mapped_column(default=None)
+
+
+class DestinyMasterChallengeDay(common.Base, kw_only=True):
+    user_id: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(
+        common.IDInteger, primary_key=True, autoincrement=False
+    )
+    game_day: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column()
+    used: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(default=0, server_default=sqlalchemy.text("0"))
+
+
+class DestinyMasterChallengeStart(common.Base, kw_only=True):
+    user_id: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(common.IDInteger, primary_key=True)
+    request_key: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(255).with_variant(sqlalchemy.Text(), "sqlite"), primary_key=True
+    )
+    payload_hash: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column()
+    game_day: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column()
+    live_difficulty_id: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(common.IDInteger)
+    live_in_progress_id: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(common.IDInteger)
+    started_at: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(common.IDInteger)
+    response_json: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.Text().with_variant(sqlalchemy.dialects.mysql.LONGTEXT(), "mysql", "mariadb")
+    )
+
+    __table_args__ = (sqlalchemy.Index("destiny_master_challenge_start_day", "user_id", "game_day"),)
+
+
 
 
 class Item(common.Base, kw_only=True):

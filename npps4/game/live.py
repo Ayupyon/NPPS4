@@ -9,6 +9,7 @@ from .. import const
 from .. import idol
 from .. import util
 from ..config import config
+from ..db import main
 from ..system import achievement
 from ..system import advanced
 from ..system import class_system as class_system_module
@@ -17,6 +18,7 @@ from ..system import effort
 from ..system import item
 from ..system import live
 from ..system import live_model
+from ..system import master_challenge
 from ..system import museum
 from ..system import ranking
 from ..system import reward
@@ -379,6 +381,10 @@ DEBUG_SERVER_SCORE_CALCULATE = False
 @idol.register("live", "partyList")
 async def live_partylist(context: idol.SchoolIdolUserParams, request: LivePartyListRequest) -> LivePartyListResponse:
     current_user = await user.get_current(context)
+    training_energy, training_energy_max = await master_challenge.get_energy(context, current_user)
+    if config.CONFIG_DATA.gameplay.master_challenge_daily_limit is not None:
+        if await master_challenge.validate_entry(context, request.live_difficulty_id, request.is_training):
+            master_challenge.require_energy(training_energy)
 
     # Check live info
     live_info = await live.get_live_info_table(context, request.live_difficulty_id)
@@ -436,8 +442,8 @@ async def live_partylist(context: idol.SchoolIdolUserParams, request: LivePartyL
     return LivePartyListResponse(
         # TODO
         party_list=party_list,
-        training_energy=current_user.training_energy,
-        training_energy_max=current_user.training_energy_max,
+        training_energy=training_energy,
+        training_energy_max=training_energy_max,
     )
 
 
@@ -500,8 +506,65 @@ async def live_precisescore(
 
 @idol.register("live", "play", xmc_verify=idol.XMCVerifyMode.CROSS)
 async def live_play(context: idol.SchoolIdolUserParams, request: LivePlayRequest) -> LivePlayResponse:
-    current_user = await user.get_current(context)
+    limit = config.CONFIG_DATA.gameplay.master_challenge_daily_limit
+    if limit is None or not await master_challenge.validate_entry(
+        context, request.live_difficulty_id, request.is_training
+    ):
+        return await start_live(context, await user.get_current(context), request)
 
+    timestamp = util.time()
+    game_day = util.get_days_since_unix(timestamp)
+    request_key, payload_hash = master_challenge.request_identity(context, request)
+    await master_challenge.lock_player(context)
+    async with context.db.main.begin_nested():
+        current_user = await user.get_current(context)
+        await context.db.main.refresh(current_user)
+        playing = await live.get_live_in_progress(context, current_user, for_update=True)
+        receipt = await context.db.main.get(
+            main.DestinyMasterChallengeStart, (current_user.id, request_key), with_for_update=True
+        )
+        if receipt is not None:
+            if receipt.payload_hash != payload_hash:
+                raise idol.error.IdolError(detail="MASTER request identity reused with different data", http_code=409)
+            if (
+                playing is None
+                or playing.id != receipt.live_in_progress_id
+                or playing.master_challenge_request_key != request_key
+            ):
+                raise idol.error.IdolError(detail="This MASTER start has already ended", http_code=409)
+            return LivePlayResponse.model_validate_json(receipt.response_json)
+
+        if playing is not None:
+            raise idol.error.IdolError(detail="A live is already in progress", http_code=409)
+        if request.lp_factor not in (1, 2, 3, 4):
+            raise idol.error.IdolError(detail="Invalid MASTER play multiplier", http_code=409)
+        await master_challenge.reserve_attempt(context, current_user, game_day, limit)
+        response = await start_live(context, current_user, request, master_challenge_request_key=request_key)
+        playing = await live.get_live_in_progress(context, current_user)
+        if playing is None:
+            raise RuntimeError("Successful MASTER start has no active live")
+        context.db.main.add(
+            main.DestinyMasterChallengeStart(
+                user_id=current_user.id,
+                request_key=request_key,
+                payload_hash=payload_hash,
+                game_day=game_day,
+                live_difficulty_id=request.live_difficulty_id,
+                live_in_progress_id=playing.id,
+                started_at=timestamp,
+                response_json=response.model_dump_json(exclude_none=True),
+            )
+        )
+        return response
+
+
+async def start_live(
+    context: idol.SchoolIdolUserParams,
+    current_user: main.User,
+    request: LivePlayRequest,
+    *,
+    master_challenge_request_key: str | None = None,
+) -> LivePlayResponse:
     # Check LP
     live_info = await live.get_live_info_table(context, request.live_difficulty_id)
     if live_info is None:
@@ -555,7 +618,13 @@ async def live_play(context: idol.SchoolIdolUserParams, request: LivePlayRequest
 
     # Register live in progress
     await live.register_live_in_progress(
-        context, current_user, guest, request.lp_factor, request.unit_deck_id, stats.model_dump_json().encode("utf-8")
+        context,
+        current_user,
+        guest,
+        request.lp_factor,
+        request.unit_deck_id,
+        stats.model_dump_json().encode("utf-8"),
+        master_challenge_request_key=master_challenge_request_key,
     )
 
     return LivePlayResponse(

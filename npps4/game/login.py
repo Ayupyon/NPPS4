@@ -5,6 +5,7 @@ from .. import util
 from ..db import main
 from ..system import achievement
 from ..system import common
+from ..system import master_challenge
 from ..system import reward
 from ..system import tutorial
 from ..system import unit
@@ -232,14 +233,15 @@ async def login_topinfo(context: idol.SchoolIdolUserParams) -> TopInfoResponse:
 @idol.register("login", "topInfoOnce")
 async def login_topinfoonce(context: idol.SchoolIdolUserParams) -> TopInfoOnceResponse:
     current_user = await user.get_current(context)
+    training_energy, training_energy_max = await master_challenge.get_energy(context, current_user)
     # TODO
     util.stub("login", "topInfoOnce", context.raw_request_data)
     return TopInfoOnceResponse(
         new_achievement_cnt=0,
         unaccomplished_achievement_cnt=await achievement.get_achievement_count(context, current_user, False),
         live_daily_reward_exist=False,
-        training_energy=current_user.training_energy,
-        training_energy_max=current_user.training_energy_max,
+        training_energy=training_energy,
+        training_energy_max=training_energy_max,
         notification=NotificationStatus(
             push=True,
             lp=False,

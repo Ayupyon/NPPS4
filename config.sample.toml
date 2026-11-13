@@ -191,6 +191,9 @@ game_day_offset_minutes = 540
 # Unix timestamp within the game day that starts the red/green/blue rotation.
 # random_live_rotation_anchor = 1794254400
 
+# Optional number of MASTER Challenge starts per game day.
+# master_challenge_daily_limit = 10
+
 # Optional starter units by album number and gold balance after tutorial phase 3.
 # starter_unit_numbers = [937, 938]
 # starter_post_tutorial_gold = 1000000

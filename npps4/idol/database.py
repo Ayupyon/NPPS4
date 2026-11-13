@@ -13,6 +13,22 @@ from ..db import scenario
 from ..db import subscenario
 from ..db import unit
 
+from typing import cast
+
+
+async def lock_user(session: sqlalchemy.ext.asyncio.AsyncSession, user_id: int) -> bool:
+    if session.bind is not None and session.bind.dialect.name == "sqlite":
+        result = await session.execute(
+            sqlalchemy.update(main.User)
+            .where(main.User.id == user_id)
+            .values(update_date=main.User.update_date)
+            .execution_options(synchronize_session=False)
+        )
+        return cast(sqlalchemy.CursorResult, result).rowcount == 1
+
+    query = sqlalchemy.select(main.User.id).where(main.User.id == user_id).with_for_update()
+    return await session.scalar(query) is not None
+
 
 class Database:
     __slots__ = (

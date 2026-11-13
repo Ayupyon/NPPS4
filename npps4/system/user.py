@@ -11,6 +11,7 @@ from . import common
 from . import core
 from . import item
 from . import live
+from . import master_challenge
 from . import scenario
 from .. import idol
 from .. import util
@@ -91,6 +92,7 @@ async def get_from_token(context: idol.BasicSchoolIdolContext, token: str, /):
 
 
 async def get_user_info(context: idol.BasicSchoolIdolContext, user: main.User):
+    training_energy, training_energy_max = await master_challenge.get_energy(context, user)
     return UserInfoData(
         user_id=user.id,
         name=user.name,
@@ -111,8 +113,8 @@ async def get_user_info(context: idol.BasicSchoolIdolContext, user: main.User):
         license_live_energy_recoverly_time=user.license_live_energy_recoverly_time,
         energy_full_need_time=(user.over_max_energy == 0) * max(user.energy_full_time - util.time(), 0),
         over_max_energy=user.over_max_energy,
-        training_energy=user.training_energy,
-        training_energy_max=user.training_energy_max,
+        training_energy=training_energy,
+        training_energy_max=training_energy_max,
         friend_max=user.friend_max,
         invite_code=user.invite_code,
         insert_date=util.timestamp_to_datetime(user.insert_date),
@@ -290,6 +292,8 @@ async def delete_user(context: idol.BasicSchoolIdolContext, user_id: int):
     user_data = await get(context, user_id)
     if user_data is None:
         raise ValueError("User doesn't exist")
+    await _clean_table(context, main.DestinyMasterChallengeStart, user_id)
+    await _clean_table(context, main.DestinyMasterChallengeDay, user_id)
     await _clean_table(context, main.NormalLiveUnlock, user_id)
     await _clean_table(context, main.LocalSerialCodeUsage, user_id)
     await _clean_table(context, main.ExchangePointItem, user_id)
