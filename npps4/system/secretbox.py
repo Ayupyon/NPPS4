@@ -1,3 +1,11 @@
+import collections
+import collections.abc
+import datetime
+import sqlite3
+import uuid
+
+import sqlalchemy.exc
+
 from . import item
 from . import secretbox_model
 from . import user
@@ -5,7 +13,12 @@ from .. import const
 from .. import data
 from .. import idol
 from .. import util
+from ..config import config
 from ..db import main
+from ..idol import database
+
+DAILY_FRIEND_POOL = "regular-myus"
+DAILY_FRIEND_BUTTON = 3
 
 
 def _determine_en_path(context: idol.BasicSchoolIdolContext, path: str, path_en: str | None, /):
@@ -69,18 +82,131 @@ async def query_secretbox_button(
 
 async def get_secretbox_button_response(
     context: idol.BasicSchoolIdolContext, target_user: main.User, secretbox: data.schema.SecretboxData
-):
-    return [
-        # TODO: Free once a day scouting
+) -> list[secretbox_model.AnySecretboxButton]:
+    name = context.get_text(secretbox.name, secretbox.name_en)
+    buttons: list[secretbox_model.AnySecretboxButton] = [
         await query_secretbox_button(
             context,
             target_user,
             button,
-            context.get_text(secretbox.name, secretbox.name_en),
+            name,
             (secretbox.secretbox_id, i),
         )
         for i, button in enumerate(secretbox.buttons, 1)
+        if not is_daily_friend_button(secretbox, i)
     ]
+    if not config.CONFIG_DATA.gameplay.daily_friend_scout or not is_daily_friend_button(secretbox, DAILY_FRIEND_BUTTON):
+        return buttons
+    validate_daily_friend_pool(secretbox)
+    if await context.db.main.get(main.DailyFriendScout, (target_user.id, util.get_days_since_unix())) is not None:
+        return buttons
+
+    button = get_secretbox_button(secretbox, DAILY_FRIEND_BUTTON)
+    free = await query_secretbox_button(
+        context, target_user, button, name, (secretbox.secretbox_id, DAILY_FRIEND_BUTTON)
+    )
+    # The client groups this free ticket with friendship costs using show_cost
+    buttons[0] = secretbox_model.SecretboxAllButtonWithShowCost(
+        secret_box_button_type=free.secret_box_button_type,
+        secret_box_name=free.secret_box_name,
+        cost_list=[free.cost_list[0].model_copy(update={"type": const.SECRETBOX_COST_TYPE.FREE_TICKET})],
+        show_cost=secretbox_model.SecretboxAllButtonShowCost(
+            cost_type=const.SECRETBOX_COST_TYPE.FRIEND,
+            unit_count=button.unit_count,
+        ),
+    )
+    return buttons
+
+
+def is_daily_friend_button(pool: data.schema.SecretboxData, button_index: int) -> bool:
+    return (
+        pool.id_string == DAILY_FRIEND_POOL
+        and button_index == DAILY_FRIEND_BUTTON
+        and len(pool.buttons) >= DAILY_FRIEND_BUTTON
+        and pool.buttons[DAILY_FRIEND_BUTTON - 1].button_type == const.SECRETBOX_BUTTON_TYPE.FREE_MULTI
+    )
+
+
+def validate_daily_friend_pool(pool: data.schema.SecretboxData) -> None:
+    expected = (
+        (const.SECRETBOX_BUTTON_TYPE.NORMAL_SINGLE, 1, const.SECRETBOX_COST_TYPE.FRIEND, 100),
+        (const.SECRETBOX_BUTTON_TYPE.NORMAL_MULTI, 10, const.SECRETBOX_COST_TYPE.FRIEND, 1000),
+        (const.SECRETBOX_BUTTON_TYPE.FREE_MULTI, 11, const.SECRETBOX_COST_TYPE.NON_COST, 0),
+    )
+    for button, (button_type, unit_count, cost_type, cost_amount) in zip(pool.buttons, expected):
+        if (
+            button.button_type != button_type
+            or button.unit_count != unit_count
+            or len(button.costs) != 1
+            or button.costs[0].cost_type != cost_type
+            or button.costs[0].cost_amount != cost_amount
+        ):
+            raise ValueError("Unexpected daily friendship scouting button layout")
+
+
+async def lock_draw(context: idol.SchoolIdolUserParams) -> None:
+    assert context.token is not None
+    try:
+        if not await database.lock_user(context.db.main, context.token.user_id):
+            raise ValueError("logic error, user is None")
+    except sqlalchemy.exc.OperationalError as exc:
+        code = getattr(exc.orig, "sqlite_errorcode", 0) & 0xFF
+        if code not in (sqlite3.SQLITE_BUSY, sqlite3.SQLITE_LOCKED):
+            raise
+        raise idol.error.IdolError(detail="Scouting is busy", http_code=409) from exc
+
+
+async def reserve_daily_friend_scout(context: idol.BasicSchoolIdolContext, target_user: main.User) -> None:
+    now = util.time()
+    game_day = util.get_days_since_unix(now)
+    if await context.db.main.get(main.DailyFriendScout, (target_user.id, game_day), with_for_update=True) is not None:
+        raise idol.error.by_code(idol.error.ERROR_CODE_SECRET_BOX_REMAINING_COST_IS_NOT_ENOUGH)
+    context.db.main.add(main.DailyFriendScout(user_id=target_user.id, game_day=game_day, claimed_at_utc=now))
+    await context.db.main.flush()
+
+
+async def record_draw(
+    context: idol.BasicSchoolIdolContext,
+    target_user: main.User,
+    pool_id: int,
+    cost: data.schema.SecretboxCost,
+    rarities: collections.abc.Iterable[int | None],
+) -> None:
+    counts = collections.Counter(rarities)
+    if not counts or counts.keys() - {1, 2, 3, 4, 5}:
+        raise RuntimeError("Unknown or empty scout rarity result")
+    account = await context.db.main.get(main.DestinyScoutAccount, target_user.id, with_for_update=True)
+    if account is None:
+        account = main.DestinyScoutAccount(user_id=target_user.id, uid=uuid.uuid4().hex)
+        context.db.main.add(account)
+    count = counts.total()
+    category = {
+        const.SECRETBOX_COST_TYPE.NON_COST: "free",
+        const.SECRETBOX_COST_TYPE.FREE_TICKET: "free_ticket",
+        const.SECRETBOX_COST_TYPE.ITEM_TICKET: "item_ticket",
+        const.SECRETBOX_COST_TYPE.GAME_COIN: "gold",
+        const.SECRETBOX_COST_TYPE.LOVECA: "loveca",
+        const.SECRETBOX_COST_TYPE.FRIEND: "friend_points",
+    }[cost.cost_type]
+    context.db.main.add(
+        main.DestinyScoutLog(
+            draw_uid=uuid.uuid4().hex,
+            account_uid=account.uid,
+            user_id=target_user.id,
+            nickname=target_user.name,
+            drawn_at_utc=datetime.datetime.now(datetime.UTC).isoformat(timespec="milliseconds"),
+            draw_type=category + ("_single" if count == 1 else "_multi"),
+            pool_id=pool_id,
+            draw_count=count,
+            cost_type=cost.cost_type,
+            cost_item_id=cost.cost_item_id or 0,
+            n_count=counts[1],
+            r_count=counts[2],
+            sr_count=counts[3],
+            ssr_count=counts[5],
+            ur_count=counts[4],
+        )
+    )
 
 
 async def get_secretbox_info_response(

@@ -436,6 +436,48 @@ class DestinyMasterChallengeStart(common.Base, kw_only=True):
     __table_args__ = (sqlalchemy.Index("destiny_master_challenge_start_day", "user_id", "game_day"),)
 
 
+class DailyFriendScout(common.Base, kw_only=True):
+    user_id: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(
+        common.IDInteger, sqlalchemy.ForeignKey(User.id, ondelete="CASCADE"), primary_key=True
+    )
+    game_day: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(primary_key=True)
+    claimed_at_utc: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(common.IDInteger)
+
+
+class DestinyScoutAccount(common.Base, kw_only=True):
+    user_id: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(
+        common.IDInteger, primary_key=True, autoincrement=False
+    )
+    uid: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(sqlalchemy.String(32), unique=True)
+
+    __table_args__ = (sqlalchemy.CheckConstraint("length(uid) = 32"),)
+
+
+class DestinyScoutLog(common.Base, kw_only=True):
+    draw_uid: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(sqlalchemy.String(32), primary_key=True)
+    account_uid: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(sqlalchemy.String(32))
+    user_id: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(common.IDInteger)
+    nickname: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column()
+    drawn_at_utc: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(sqlalchemy.String(32))
+    draw_type: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(sqlalchemy.String(32))
+    pool_id: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(common.IDInteger)
+    draw_count: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column()
+    cost_type: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column()
+    cost_item_id: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column()
+    n_count: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column()
+    r_count: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column()
+    sr_count: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column()
+    ssr_count: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column()
+    ur_count: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column()
+
+    __table_args__ = (
+        sqlalchemy.Index("destiny_scout_log_account_time", "account_uid", "drawn_at_utc"),
+        sqlalchemy.CheckConstraint("draw_count > 0"),
+        sqlalchemy.CheckConstraint(
+            "n_count >= 0 AND r_count >= 0 AND sr_count >= 0 AND ssr_count >= 0 AND ur_count >= 0"
+        ),
+        sqlalchemy.CheckConstraint("draw_count = n_count + r_count + sr_count + ssr_count + ur_count"),
+    )
 
 
 class Item(common.Base, kw_only=True):

@@ -115,7 +115,6 @@ LOWEST_RARITY_SORT_ORDER = (1, 2, 3, 5, 4)
 @idol.register("secretbox", "pon", batchable=False)
 @idol.register("secretbox", "multi", batchable=False)
 async def secretbox_gachapon(context: idol.SchoolIdolUserParams, request: SecretboxPonRequest) -> SecretboxPonResponse:
-    current_user = await user.get_current(context)
     secretbox_id, button_index, cost_index = secretbox.decode_cost_id(request.id)
 
     try:
@@ -124,15 +123,31 @@ async def secretbox_gachapon(context: idol.SchoolIdolUserParams, request: Secret
         util.log("uh oh secretbox_data", secretbox_id, e=e)
         raise idol.error.by_code(idol.error.ERROR_CODE_SECRET_BOX_NOT_EXIST) from e
 
-    try:
-        secretbox_button = secretbox.get_secretbox_button(secretbox_data, button_index)
-        secretbox_cost = secretbox_button.costs[cost_index - 1]
-    except IndexError as e:
-        util.log("uh oh secretbox_button", button_index, cost_index, e=e)
-        raise idol.error.by_code(idol.error.ERROR_CODE_SECRET_BOX_COST_TYPE_IS_NOT_SPECIFIED) from e
+    if (
+        not 1 <= button_index <= len(secretbox_data.buttons)
+        or secretbox_data.id_string == secretbox.DAILY_FRIEND_POOL
+        and request.secret_box_id != secretbox_id
+    ):
+        raise idol.error.by_code(idol.error.ERROR_CODE_SECRET_BOX_COST_TYPE_IS_NOT_SPECIFIED)
+    secretbox_button = secretbox.get_secretbox_button(secretbox_data, button_index)
+    if not 1 <= cost_index <= len(secretbox_button.costs):
+        raise idol.error.by_code(idol.error.ERROR_CODE_SECRET_BOX_COST_TYPE_IS_NOT_SPECIFIED)
+    secretbox_cost = secretbox_button.costs[cost_index - 1]
+
+    daily_friend = secretbox.is_daily_friend_button(secretbox_data, button_index)
+    gameplay = config.CONFIG_DATA.gameplay
+    if daily_friend:
+        if not gameplay.daily_friend_scout:
+            raise idol.error.by_code(idol.error.ERROR_CODE_SECRET_BOX_COST_TYPE_IS_NOT_SPECIFIED)
+        secretbox.validate_daily_friend_pool(secretbox_data)
+    if daily_friend or gameplay.scout_audit:
+        await secretbox.lock_draw(context)
+    current_user = await user.get_current(context)
+    if daily_friend:
+        await secretbox.reserve_daily_friend_scout(context, current_user)
 
     # Check currency
-    cost_amount = math.ceil(secretbox_cost.cost_amount * config.CONFIG_DATA.gameplay.secretbox_cost_multiplier)
+    cost_amount = math.ceil(secretbox_cost.cost_amount * gameplay.secretbox_cost_multiplier)
     if (
         await secretbox.get_user_currency(context, current_user, secretbox_cost.cost_type, secretbox_cost.cost_item_id)
         < cost_amount
@@ -220,6 +235,10 @@ async def secretbox_gachapon(context: idol.SchoolIdolUserParams, request: Secret
     await secretbox.sub_user_currency(
         context, current_user, secretbox_cost.cost_type, secretbox_cost.cost_item_id, cost_amount
     )
+    if gameplay.scout_audit:
+        await secretbox.record_draw(
+            context, current_user, secretbox_id, secretbox_cost, (unit.unit_rarity_id for unit in unit_data_list)
+        )
 
     if umi_rare_mode:
         unit_data_list[0].unit_rarity_id = 4

@@ -194,6 +194,11 @@ game_day_offset_minutes = 540
 # Optional number of MASTER Challenge starts per game day.
 # master_challenge_daily_limit = 10
 
+# Enable the daily free eleven-pull in regular Muse scouting.
+daily_friend_scout = false
+# Record successful scouting draws with their account UID and rarity counts.
+scout_audit = false
+
 # Optional overrides keyed by achievement ID.
 # daily_clear_required_groups = { "20010015" = 13, "20010016" = 113 }
 # daily_clear_bonus_loveca = { "20010015" = 1, "20010016" = 1, "20010017" = 1 }

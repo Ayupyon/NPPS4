@@ -133,6 +133,8 @@ class _Gameplay(pydantic.BaseModel):
     game_day_offset_minutes: int = pydantic.Field(default=540, ge=-1439, le=1439)
     random_live_rotation_anchor: int | None = pydantic.Field(default=None, ge=0)
     master_challenge_daily_limit: pydantic.PositiveInt | None = None
+    daily_friend_scout: bool = False
+    scout_audit: bool = False
     daily_clear_required_groups: dict[int, int] = pydantic.Field(default_factory=dict)
     daily_clear_bonus_loveca: dict[int, pydantic.NonNegativeInt] = pydantic.Field(default_factory=dict)
     block_fragment_achievement_claims: bool = False

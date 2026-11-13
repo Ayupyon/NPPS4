@@ -292,6 +292,8 @@ async def delete_user(context: idol.BasicSchoolIdolContext, user_id: int):
     user_data = await get(context, user_id)
     if user_data is None:
         raise ValueError("User doesn't exist")
+    await _clean_table(context, main.DailyFriendScout, user_id)
+    await _clean_table(context, main.DestinyScoutAccount, user_id)
     await _clean_table(context, main.DestinyAchievementClaimReviewDecision, user_id)
     await _clean_table(context, main.DestinyAchievementClaimReview, user_id)
     await _clean_table(context, main.DestinyAchievementClaimReceipt, user_id)
