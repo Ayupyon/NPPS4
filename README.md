@@ -186,6 +186,15 @@ git pull --ff-only
 alembic upgrade head
 ```
 
+Update existing configuration entries that point to the bundled JSON files to use these paths.
+
+| Setting | Bundled file |
+| --- | --- |
+| `server_data` | `resources/server_data.json` |
+
+If you customized the bundled server data, carry those edits into its new location before restarting.
+Keep pointing to your deployment's own data files if you configured separate paths such as `data/server_data.json`.
+
 Most changes requires a server restart. However, changes that only touch `server_data.json` does not require server
 restart as that particular file is hot-reloaded by the server.
 

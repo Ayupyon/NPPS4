@@ -40,7 +40,7 @@ class _Main(pydantic.BaseModel):
         str, pydantic.Field(validation_alias=pydantic.AliasChoices("server_private_key_password", "pkeypass"))
     ] = ""
     server_data: Annotated[str, pydantic.Field(validation_alias=pydantic.AliasChoices("server_data", "serverdata"))] = (
-        "npps4/server_data.json"
+        "resources/server_data.json"
     )
     session_expiry: Annotated[
         int, pydantic.Field(validation_alias=pydantic.AliasChoices("session_expiry", "tokenexpiry"))

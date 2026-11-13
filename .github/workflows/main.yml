@@ -70,7 +70,7 @@ jobs:
       run: venv\Scripts\pyinstaller npps4.spec
     - name: Copy Runtime Files
       run: |
-        robocopy "beatmaps" "dist\npps4\beatmaps" /E
+        robocopy "resources" "dist\npps4\resources" /E
         if errorlevel 8 exit /b 1
         robocopy "external" "dist\npps4\external" /E
         if errorlevel 8 exit /b 1
@@ -80,8 +80,6 @@ jobs:
         if errorlevel 8 exit /b 1
         robocopy "templates" "dist\npps4\templates" /E
         if errorlevel 8 exit /b 1
-        copy npps4\server_data.json dist\npps4\server_data.json
-        if errorlevel 1 exit /b 1
         copy default_server_key.pem dist\npps4\server_key.pem
         if errorlevel 1 exit /b 1
     - name: Generate config.toml
@@ -96,7 +94,7 @@ jobs:
 
         config = config.replace(
             'server_private_key = "default_server_key.pem"', 'server_private_key = "server_key.pem"'
-        ).replace('server_data = "npps4/server_data.json"', 'server_data = "server_data.json"')
+        )
 
         dlapi_server = os.environ.get("NPPS4_CONFIG_DOWNLOAD_N4DLAPI_SERVER", "")
         if dlapi_server:
@@ -136,12 +134,11 @@ jobs:
       run: |
         set -e
 
-        cp -r beatmaps dist/npps4/
+        cp -r resources dist/npps4/
         cp -r external dist/npps4/
         cp -r scripts dist/npps4/
         cp -r static dist/npps4/
         cp -r templates dist/npps4/
-        cp npps4/server_data.json dist/npps4/server_data.json
         cp default_server_key.pem dist/npps4/server_key.pem
     - name: Generate config.toml
       env:
@@ -155,7 +152,7 @@ jobs:
 
         config = config.replace(
             'server_private_key = "default_server_key.pem"', 'server_private_key = "server_key.pem"'
-        ).replace('server_data = "npps4/server_data.json"', 'server_data = "server_data.json"')
+        )
 
         dlapi_server = os.environ.get("NPPS4_CONFIG_DOWNLOAD_N4DLAPI_SERVER", "")
         if dlapi_server:

@@ -17,7 +17,7 @@ RUN pip install --root-user-action=ignore --no-cache-dir -r requirements.txt -r 
 # Least modified file first
 ARG PRIVATE_KEY_FILE=default_server_key.pem
 COPY ${PRIVATE_KEY_FILE} default_server_key.pem
-COPY ./beatmaps beatmaps
+COPY ./resources resources
 COPY ./external external
 COPY ./alembic.ini alembic.ini
 COPY ./LICENSE.md LICENSE.md
