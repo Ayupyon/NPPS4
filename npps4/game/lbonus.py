@@ -14,6 +14,7 @@ from ..system import item_model
 from ..system import lbonus
 from ..system import museum
 from ..system import reward
+from ..system import reward_egg
 from ..system import user
 
 
@@ -46,15 +47,19 @@ class LoginBonusResponse(achievement.AchievementMixin, common.TimestampMixin):
         default_factory=class_system_module.ClassSystemData
     )  # TODO
     start_dash_sheets: list  # TODO
-    effort_point: list[effort.EffortPointInfo]
-    limited_effort_box: list  # TODO
+    effort_point: list[pydantic.SerializeAsAny[effort.EffortPointInfo]]
+    limited_effort_box: dict[str, int] | list[object]
     after_user_info: user.UserInfoData
     museum_info: museum.MuseumInfoData
     present_cnt: int
 
 
 @idol.register("lbonus", "execute", batchable=False, xmc_verify=idol.XMCVerifyMode.CROSS, exclude_none=True)
-async def lbonus_execute(context: idol.SchoolIdolUserParams) -> LoginBonusResponse:
+async def lbonus_execute(context: idol.SchoolIdolUserParams) -> LoginBonusResponse | reward_egg.WireResponse:
+    return await reward_egg.settle(context, "lbonus", lambda: execute_login_bonus(context))
+
+
+async def execute_login_bonus(context: idol.SchoolIdolUserParams) -> LoginBonusResponse:
     server_timestamp = util.time()
     current_datetime = util.game_day_datetime(server_timestamp)
 
@@ -139,7 +144,7 @@ async def lbonus_execute(context: idol.SchoolIdolUserParams) -> LoginBonusRespon
         license_lbonus_list=[],  # TODO
         start_dash_sheets=[],  # TODO
         effort_point=effort_result,
-        limited_effort_box=[],  # TODO
+        limited_effort_box=await reward_egg.offer_info(context, current_user.id),
         accomplished_achievement_list=await achievement.to_game_representation(
             context, achievement_list.accomplished, accomplished_rewards
         ),

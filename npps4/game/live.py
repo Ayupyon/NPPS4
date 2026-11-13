@@ -1,4 +1,5 @@
 import copy
+import functools
 import itertools
 import json
 import math
@@ -22,6 +23,7 @@ from ..system import master_challenge
 from ..system import museum
 from ..system import ranking
 from ..system import reward
+from ..system import reward_egg
 from ..system import scenario
 from ..system import subscenario
 from ..system import unit
@@ -299,9 +301,9 @@ class LiveRewardResponse(achievement.AchievementMixin, common.TimestampMixin, us
     reward_unit_list: LiveRewardUnitList
     unlocked_subscenario_ids: list[int]
     unlocked_multi_unit_scenario_ids: list[int] = pydantic.Field(default_factory=list)  # TODO
-    effort_point: list[effort.EffortPointInfo]
+    effort_point: list[pydantic.SerializeAsAny[effort.EffortPointInfo]]
     is_effort_point_visible: bool = True
-    limited_effort_box: list = pydantic.Field(default_factory=list)  # TODO
+    limited_effort_box: dict[str, int] | list[object] = pydantic.Field(default_factory=list)
     unit_list: list[LiveRewardResponseUnitList]
     next_level_info: list[user.NextLevelInfo]
     goal_accomp_info: LiveRewardGoalAccomplishedInfo
@@ -510,6 +512,8 @@ async def live_play(context: idol.SchoolIdolUserParams, request: LivePlayRequest
     if limit is None or not await master_challenge.validate_entry(
         context, request.live_difficulty_id, request.is_training
     ):
+        if reward_egg.get_policy() is not None:
+            await reward_egg.lock_player(context)
         return await start_live(context, await user.get_current(context), request)
 
     timestamp = util.time()
@@ -626,6 +630,11 @@ async def start_live(
         stats.model_dump_json().encode("utf-8"),
         master_challenge_request_key=master_challenge_request_key,
     )
+    if reward_egg.get_policy() is not None:
+        playing = await live.get_live_in_progress(context, current_user)
+        if playing is None:
+            raise RuntimeError("Successful Live start has no active Live")
+        await reward_egg.bind_live(context, playing, request.live_difficulty_id)
 
     return LivePlayResponse(
         rank_info=[
@@ -644,12 +653,21 @@ async def start_live(
 
 @idol.register("live", "gameover")
 async def live_gameover(context: idol.SchoolIdolUserParams) -> None:
+    if reward_egg.get_policy() is not None:
+        await reward_egg.lock_player(context)
     current_user = await user.get_current(context)
     await live.clean_live_in_progress(context, current_user)
 
 
 @idol.register("live", "reward")
-async def live_reward(context: idol.SchoolIdolUserParams, request: LiveRewardRequest) -> LiveRewardResponse:
+async def live_reward(
+    context: idol.SchoolIdolUserParams, request: LiveRewardRequest
+) -> LiveRewardResponse | reward_egg.WireResponse:
+    operation = functools.partial(settle_live_reward, context, request)
+    return await reward_egg.settle(context, "live", operation)
+
+
+async def settle_live_reward(context: idol.SchoolIdolUserParams, request: LiveRewardRequest) -> LiveRewardResponse:
     # FIXME: Perform validation to keep cheaters away?
     # FIXME: Modularize this thing for MedFes, ChaFest, Score Match, etc.
 
@@ -657,6 +675,9 @@ async def live_reward(context: idol.SchoolIdolUserParams, request: LiveRewardReq
     live_in_progress = await live.get_live_in_progress(context, current_user)
     if live_in_progress is None:
         raise idol.error.IdolError(detail="attempt to finish live show without playing", http_code=403)
+    trusted_song = reward_egg.get_policy() is not None and await reward_egg.verify_live_binding(
+        context, live_in_progress, request.live_difficulty_id
+    )
 
     live_difficulty_info = await live.get_live_info_table(context, request.live_difficulty_id)
     if live_difficulty_info is None:
@@ -770,8 +791,11 @@ async def live_reward(context: idol.SchoolIdolUserParams, request: LiveRewardReq
     before_after_loves = await unit.add_love_by_deck(context, current_user, live_in_progress.unit_deck_id, love_count)
 
     # Add live effort
-    effort_result, offer_limited_effort = await effort.add_effort(
-        context, current_user, score * live_in_progress.lp_factor
+    song_category = None
+    if trusted_song:
+        song_category = (await live.get_live_track_info(context, live_setting.live_track_id)).member_category
+    effort_result, _ = await effort.add_effort(
+        context, current_user, score * live_in_progress.lp_factor, offer_after_live=True, song_category=song_category
     )
     for eff in effort_result:
         for r in eff.rewards:
@@ -923,6 +947,7 @@ async def live_reward(context: idol.SchoolIdolUserParams, request: LiveRewardReq
         reward_unit_list=reward_unit_list,
         unlocked_subscenario_ids=subscenario_unlocks,
         effort_point=effort_result,
+        limited_effort_box=await reward_egg.offer_info(context, current_user.id),
         unit_list=[
             LiveRewardResponseUnitList.from_unit_data(
                 unit_data_full, position=i + 1, before_love=before_after_loves.before[i]

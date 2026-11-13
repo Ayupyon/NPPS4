@@ -12,6 +12,7 @@ if not config.is_script_mode():
     from . import common
     from . import costume
     from . import download
+    from . import effort
     from . import event
     from . import eventscenario
     from . import exchange

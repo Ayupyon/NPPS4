@@ -179,7 +179,7 @@ live_unit_drop = ""
 # Path is relative to the project root directory.
 # Note: The file path is not configurable in Android.
 # Environment Variable: NPPS4_CONFIG_GAME_BOXDROP
-live_box_drop = "external/live_box_drop.py"
+live_box_drop = ""
 
 [gameplay]
 # Gameplay-related configuration
@@ -198,6 +198,9 @@ game_day_offset_minutes = 540
 daily_friend_scout = false
 # Record successful scouting draws with their account UID and rarity counts.
 scout_audit = false
+
+# Optional reward egg policy file relative to the server directory.
+# reward_egg_policy = "resources/events/reward_egg_policy.json"
 
 # Optional overrides keyed by achievement ID.
 # daily_clear_required_groups = { "20010015" = 13, "20010016" = 113 }

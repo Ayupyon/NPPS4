@@ -436,6 +436,36 @@ class DestinyMasterChallengeStart(common.Base, kw_only=True):
     __table_args__ = (sqlalchemy.Index("destiny_master_challenge_start_day", "user_id", "game_day"),)
 
 
+class DestinyRewardEgg(common.Base, kw_only=True):
+    user_id: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(
+        common.IDInteger, sqlalchemy.ForeignKey(User.id, ondelete="CASCADE"), primary_key=True
+    )
+    pending_event: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(default=0, server_default="0")
+    pending_spec: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(default=0, server_default="0")
+    saved_spec: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(default=0, server_default="0")
+    generation: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(default=0, server_default="0")
+    last_choice: sqlalchemy.orm.Mapped[int | None] = sqlalchemy.orm.mapped_column(default=None)
+    openings: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(default=0, server_default="0")
+
+
+class DestinyRewardEggReceipt(common.Base, kw_only=True):
+    user_id: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(
+        common.IDInteger, sqlalchemy.ForeignKey(User.id, ondelete="CASCADE"), primary_key=True
+    )
+    action: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(sqlalchemy.String(32), primary_key=True)
+    request_key: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(_claim_key_type, primary_key=True)
+    payload_hash: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(sqlalchemy.String(64))
+    response: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(_claim_json_type)
+
+
+class DestinyRewardEggLive(common.Base, kw_only=True):
+    user_id: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(
+        common.IDInteger, sqlalchemy.ForeignKey(User.id, ondelete="CASCADE"), primary_key=True
+    )
+    live_in_progress_id: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(common.IDInteger)
+    live_difficulty_id: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(common.IDInteger)
+
+
 class DailyFriendScout(common.Base, kw_only=True):
     user_id: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(
         common.IDInteger, sqlalchemy.ForeignKey(User.id, ondelete="CASCADE"), primary_key=True

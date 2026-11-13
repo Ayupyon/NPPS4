@@ -366,6 +366,9 @@ async def get_live_in_progress(context: idol.BasicSchoolIdolContext, user: main.
 
 
 async def clean_live_in_progress(context: idol.BasicSchoolIdolContext, user: main.User):
+    await context.db.main.execute(
+        sqlalchemy.delete(main.DestinyRewardEggLive).where(main.DestinyRewardEggLive.user_id == user.id)
+    )
     q = sqlalchemy.delete(main.LiveInProgress).where(main.LiveInProgress.user_id == user.id)
     result = cast(sqlalchemy.CursorResult, await context.db.main.execute(q))
     return result.rowcount > 0
@@ -393,6 +396,9 @@ async def register_live_in_progress(
         )
         context.db.main.add(wip)
     else:
+        await context.db.main.execute(
+            sqlalchemy.delete(main.DestinyRewardEggLive).where(main.DestinyRewardEggLive.user_id == user.id)
+        )
         live_in_progress.party_user_id = party_user.id
         live_in_progress.lp_factor = lp_factor
         live_in_progress.unit_deck_id = unit_deck_id

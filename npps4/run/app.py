@@ -9,8 +9,11 @@ from .. import webview
 from .. import other
 from .. import util
 from ..app import app
+from ..system import reward_egg
 
 from typing import Annotated
+
+reward_egg.get_policy()
 
 
 # 404 handler

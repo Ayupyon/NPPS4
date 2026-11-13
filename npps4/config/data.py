@@ -97,7 +97,7 @@ class _Game(pydantic.BaseModel):
     ] = ""
     live_box_drop: Annotated[
         str, pydantic.Field(validation_alias=pydantic.AliasChoices("live_box_drop", "boxdrop"))
-    ] = "external/live_box_drop.py"
+    ] = ""
 
 
 class _Advanced(pydantic.BaseModel):
@@ -135,6 +135,7 @@ class _Gameplay(pydantic.BaseModel):
     master_challenge_daily_limit: pydantic.PositiveInt | None = None
     daily_friend_scout: bool = False
     scout_audit: bool = False
+    reward_egg_policy: str | None = None
     daily_clear_required_groups: dict[int, int] = pydantic.Field(default_factory=dict)
     daily_clear_bonus_loveca: dict[int, pydantic.NonNegativeInt] = pydantic.Field(default_factory=dict)
     block_fragment_achievement_claims: bool = False
