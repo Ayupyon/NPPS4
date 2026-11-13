@@ -132,6 +132,8 @@ class _ImportExport(pydantic.BaseModel):
 class _Gameplay(pydantic.BaseModel):
     game_day_offset_minutes: int = pydantic.Field(default=540, ge=-1439, le=1439)
     random_live_rotation_anchor: int | None = pydantic.Field(default=None, ge=0)
+    starter_unit_numbers: list[pydantic.PositiveInt] = pydantic.Field(default_factory=list)
+    starter_post_tutorial_gold: pydantic.NonNegativeInt | None = None
     energy_multiplier: Annotated[
         float, pydantic.Field(validation_alias=pydantic.AliasChoices("energy_multiplier", "lpmul"))
     ] = 1

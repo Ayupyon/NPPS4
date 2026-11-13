@@ -6,6 +6,7 @@ from ..db import main
 from ..system import achievement
 from ..system import common
 from ..system import reward
+from ..system import tutorial
 from ..system import unit
 from ..system import user
 from ..idol import cache
@@ -194,6 +195,7 @@ async def login_startup(context: idol.SchoolIdolAuthParams, request: LoginReques
 
     # Create user
     u = await user.create(context, str(loginkey, "UTF-8"), str(passwd, "UTF-8"))
+    await tutorial.grant_starter_gifts(context, u)
     await session.invalidate_current(context)
     return StartupResponse(user_id=str(u.id))
 

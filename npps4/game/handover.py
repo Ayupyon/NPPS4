@@ -5,6 +5,7 @@ from .. import util
 from ..idol import session
 from ..system import common
 from ..system import handover
+from ..system import tutorial
 from ..system import user
 
 
@@ -61,6 +62,7 @@ async def handover_exec(context: idol.SchoolIdolUserParams, request: HandoverExe
         # Reroll
         assert current_user.key is not None and current_user.passwd is not None
         target_user = await user.create(context, current_user.key, current_user.passwd)
+        await tutorial.grant_starter_gifts(context, target_user)
     else:
         target_user = await handover.find_user_by_passcode(context, request.handover_code)
         if target_user is None:
