@@ -27,8 +27,12 @@ class ItemListReinforceInfo(pydantic.BaseModel):
     available_unit_list: list[dict]  # Additionally has mark_id (int) and sub_evaluation (int)
 
 
+class GeneralItemCount(common.ItemCount):
+    use_button_flag: bool = False
+
+
 class ItemListResponse(pydantic.BaseModel):
-    general_item_list: list[common.ItemCount]
+    general_item_list: list[GeneralItemCount]
     buff_item_list: list[common.ItemCount]
     reinforce_item_list: list[common.ItemCount]
     reinforce_info: Annotated[dict[str, ItemListReinforceInfo], pydantic.BeforeValidator(empty_list_is_empty_dict)] = (
@@ -41,5 +45,7 @@ async def item_list(context: idol.SchoolIdolUserParams) -> ItemListResponse:
     current_user = await user.get_current(context=context)
     general_item_list, buff_item_list, reinforce_item_list = await item.get_item_list(context, current_user)
     return ItemListResponse(
-        general_item_list=general_item_list, buff_item_list=buff_item_list, reinforce_item_list=reinforce_item_list
+        general_item_list=[GeneralItemCount(item_id=entry.item_id, amount=entry.amount) for entry in general_item_list],
+        buff_item_list=buff_item_list,
+        reinforce_item_list=reinforce_item_list,
     )
