@@ -202,6 +202,9 @@ scout_audit = false
 # Enable the friends-only mailbox with per-player send limits.
 friend_mail = false
 
+# Enable published event art and the acknowledged event home ZIP.
+event_client_resources = false
+
 # Optional reward egg policy file relative to the server directory.
 # reward_egg_policy = "resources/events/reward_egg_policy.json"
 

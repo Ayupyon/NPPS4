@@ -136,6 +136,7 @@ class _Gameplay(pydantic.BaseModel):
     daily_friend_scout: bool = False
     scout_audit: bool = False
     friend_mail: bool = False
+    event_client_resources: bool = False
     reward_egg_policy: str | None = None
     daily_clear_required_groups: dict[int, int] = pydantic.Field(default_factory=dict)
     daily_clear_bonus_loveca: dict[int, pydantic.NonNegativeInt] = pydantic.Field(default_factory=dict)

@@ -1,7 +1,10 @@
+import pathlib
+
 import fastapi
 
+from . import dltype
+from . import event_presentation
 from . import none as none_backend
-
 from .. import idoltype
 from ..config import config, cfgtype
 
@@ -73,7 +76,28 @@ async def get_single_package(
 async def get_raw_files(request: fastapi.Request, platform: idoltype.PlatformType, files: list[str]):
     global CURRENT_BACKEND
     assert CURRENT_BACKEND is not None
-    return await CURRENT_BACKEND.get_raw_files(request, platform, files)
+    if event_presentation.protocol_version() is None:
+        return await CURRENT_BACKEND.get_raw_files(request, platform, files)
+
+    published: dict[int, dltype.BaseInfo] = {}
+    delegated: list[str] = []
+    store = event_presentation.get_store(pathlib.Path(config.ROOT_DIR))
+    for index, filename in enumerate(files):
+        name = filename.removeprefix("external/")
+        if not name.startswith(("assets/image/event/published/", "en/assets/image/event/published/")):
+            delegated.append(filename)
+            continue
+        try:
+            asset = store.raw_file(request, platform, name)
+        except (OSError, ValueError, TypeError, KeyError):
+            asset = None
+        published[index] = asset or dltype.BaseInfo(url="", size=0, checksums=dltype.Checksum(md5="", sha256=""))
+
+    backend = await CURRENT_BACKEND.get_raw_files(request, platform, delegated) if delegated else []
+    if len(backend) != len(delegated):
+        raise ValueError("Native resource response length mismatch")
+    delegated_assets = iter(backend)
+    return [published[index] if index in published else next(delegated_assets) for index in range(len(files))]
 
 
 CURRENT_BACKEND.initialize()
