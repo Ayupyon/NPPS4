@@ -149,13 +149,13 @@ archive_root = "archive-root"
 file = "external/custom_downloader.py"
 
 [game]
-# Game-specific configuration
+# Leave a script path empty to use the built-in implementation.
 
 # Specify badwords checker script.
 # Path is relative to the project root directory.
 # Note: The file path is not configurable in Android.
 # Environment Variable: NPPS4_CONFIG_GAME_BADWORDS
-badwords = "external/badwords.py"
+badwords = ""
 
 # Specify login bonus reward generator script.
 # Path is relative to the project root directory.

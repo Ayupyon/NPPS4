@@ -8,7 +8,10 @@ import Cryptodome.PublicKey.RSA
 
 from . import cfgtype, data
 
-from typing import cast
+from typing import TYPE_CHECKING, cast
+
+if TYPE_CHECKING:
+    from .. import idol
 
 BUNDLE_DIR: str | None
 """If running under pyinstaller, this will be pointing to sys._MEIPASS"""
@@ -128,19 +131,21 @@ BADWORDS_CHECK_FILE = os.path.join(ROOT_DIR, CONFIG_DATA.game.badwords)
 _badwords_check_module = None
 
 
-async def contains_badwords(string: str, context):
+async def contains_badwords(string: str, context: "idol.BasicSchoolIdolContext") -> bool:
     global _badwords_check_module
 
     if _badwords_check_module is None:
-        _badwords_check_module = cast(
-            cfgtype.BadwordsCheckProtocol, load_module_from_file(BADWORDS_CHECK_FILE, "external.badwords")
-        )
+        if filename := CONFIG_DATA.game.badwords:
+            _badwords_check_module = load_module_from_file(os.path.join(ROOT_DIR, filename), "external.badwords")
+        else:
+            from ..system import badwords
+
+            _badwords_check_module = badwords
 
     return await _badwords_check_module.has_badwords(string, context)
 
 
-BEATMAP_PROVIDER_FILE = os.path.join(ROOT_DIR, CONFIG_DATA.game.beatmaps)
-_beatmap_provider_module = None
+_beatmap_provider_module: cfgtype.BeatmapProviderProtocol | None = None
 
 
 def get_beatmap_provider_protocol():
