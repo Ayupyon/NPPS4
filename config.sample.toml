@@ -194,6 +194,9 @@ game_day_offset_minutes = 540
 # Optional number of MASTER Challenge starts per game day.
 # master_challenge_daily_limit = 10
 
+# Optional overrides keyed by achievement ID.
+# daily_clear_required_groups = { "20010015" = 13, "20010016" = 113 }
+# daily_clear_bonus_loveca = { "20010015" = 1, "20010016" = 1, "20010017" = 1 }
 # Optional starter units by album number and gold balance after tutorial phase 3.
 # starter_unit_numbers = [937, 938]
 # starter_post_tutorial_gold = 1000000

@@ -20,8 +20,10 @@ from .. import data
 from .. import db
 from .. import idol
 from .. import util
+from ..config import config
 from ..db import achievement
 from ..db import main
+from ..idol import database
 
 from typing import Any
 
@@ -886,6 +888,14 @@ class CheckLiveAdvanced(AchievementChecker[AchievementUpdateLiveClear]):
         data: AchievementUpdateLiveClear,
         achievement_info: achievement.Achievement,
     ) -> bool:
+        if achievement_info.reset_type == 1:
+            required_group = config.CONFIG_DATA.gameplay.daily_clear_required_groups.get(
+                achievement_info.achievement_id
+            )
+            if required_group is not None:
+                members = await get_unit_type_groups(context, required_group)
+                return any(member_type in data.team_unit_type_ids for member_type, _ in members)
+
         if achievement_info.params10 is None:
             return False
 
@@ -1034,6 +1044,8 @@ class CheckAchievementClear(AchievementChecker[AchievementUpdateAchievementCompl
     async def initvalue(
         self, context: idol.BasicSchoolIdolContext, user: main.User, achievement_info: achievement.Achievement
     ) -> int:
+        if achievement_info.reset_type == 1:
+            return len(await get_daily_completed_achievement_ids(context, user, achievement_info))
         assert achievement_info.params1 is not None
         ach_id_in_cat = set(await get_achievement_ids_from_category(context, achievement_info.params1))
         return await count_accomplished_achievement_by_set(context, user, ach_id_in_cat)
@@ -1050,6 +1062,8 @@ class CheckAchievementClear(AchievementChecker[AchievementUpdateAchievementCompl
         data: AchievementUpdateAchievementComplete,
         achievement_info: achievement.Achievement,
     ) -> int:
+        if achievement_info.reset_type == 1:
+            return len(await get_daily_completed_achievement_ids(context, user, achievement_info))
         assert achievement_info.params1 is not None
         ach_id_in_cat = set(await get_achievement_ids_from_category(context, achievement_info.params1))
         completed_ach_id = set(data.completed_achievement_id)
@@ -1271,6 +1285,26 @@ async def get_achievement_ids_from_category(context: idol.BasicSchoolIdolContext
     return list(result.scalars())
 
 
+async def get_daily_completed_achievement_ids(
+    context: idol.BasicSchoolIdolContext,
+    user: main.User,
+    achievement_info: achievement.Achievement,
+    timestamp: int | None = None,
+) -> set[int]:
+    assert achievement_info.params1 is not None
+    achievement_ids = set(await get_achievement_ids_from_category(context, achievement_info.params1))
+    achievement_ids.discard(achievement_info.achievement_id)
+    query = sqlalchemy.select(main.Achievement.achievement_id).where(
+        main.Achievement.user_id == user.id,
+        main.Achievement.achievement_id.in_(achievement_ids),
+        main.Achievement.is_accomplished.is_(True),
+        sqlalchemy.or_(
+            main.Achievement.reset_type != 1, main.Achievement.reset_value == util.get_days_since_unix(timestamp)
+        ),
+    )
+    return set((await context.db.main.scalars(query)).all())
+
+
 async def add_achievement(
     context: idol.BasicSchoolIdolContext,
     user: main.User,
@@ -1293,6 +1327,7 @@ async def add_achievement(
         end_date=0 if ach.end_date is None else util.datetime_to_timestamp(ach.end_date),
         is_new=True,
         reset_type=ach.reset_type,
+        reset_value=util.get_days_since_unix(time) if ach.reset_type == 1 else 0,
     )
     context.db.main.add(user_ach)
     if flush:
@@ -1308,12 +1343,61 @@ async def has_achievement(context: idol.BasicSchoolIdolContext, user: main.User,
     return result.scalar() is not None
 
 
+async def prepare_daily_achievements(
+    context: idol.BasicSchoolIdolContext, user: main.User, timestamp: int | None = None
+):
+    now = util.time() if timestamp is None else timestamp
+    game_day = util.get_days_since_unix(now)
+    session = context.db.main
+    if context.get_cache("daily_achievement_day", user.id) == game_day:
+        return
+
+    await database.lock_user(session, user.id)
+
+    query = (
+        sqlalchemy.select(main.Achievement)
+        .where(main.Achievement.user_id == user.id, main.Achievement.reset_type == 1)
+        .with_for_update()
+        .execution_options(populate_existing=True)
+    )
+    daily_achievements = (await session.scalars(query)).all()
+    prerequisite_achievements = []
+    for row in daily_achievements:
+        if row.reset_value != game_day:
+            updated = row.update_date or row.insert_date
+            if row.reset_value != 0 or updated > now or util.get_days_since_unix(updated) != game_day:
+                info = await context.db.achievement.get(achievement.Achievement, row.achievement_id)
+                if info is None or not info.default_open_flag:
+                    await session.delete(row)
+                    continue
+                row.count = 0
+                row.is_accomplished = False
+                row.is_reward_claimed = False
+                row.is_new = True
+            row.reset_value = game_day
+            row.update_date = now
+        if row.achievement_type == 53 and not row.is_reward_claimed:
+            prerequisite_achievements.append(row)
+
+    await session.flush()
+    for row in prerequisite_achievements:
+        info = await get_achievement_info(context, row.achievement_id)
+        if info.params1 is not None and info.params2 is not None:
+            completed = await get_daily_completed_achievement_ids(context, user, info, now)
+            row.count = min(len(completed), info.params2)
+            row.is_accomplished = row.count >= info.params2
+    await session.flush()
+    if not session.in_nested_transaction():
+        context.set_cache("daily_achievement_day", user.id, game_day)
+
+
 async def update_resettable_achievement(
     context: idol.BasicSchoolIdolContext, user: main.User, ts: int | None = None, /
 ):
     if ts is None:
         ts = util.time()
 
+    await prepare_daily_achievements(context, user, ts)
     if context.get_cache(f"update_resettable_achievement_{ts}", user.id) is not None:
         return
 
@@ -1322,9 +1406,6 @@ async def update_resettable_achievement(
         main.Achievement.user_id == user.id,
         main.Achievement.reset_type > 0,
         sqlalchemy.or_(
-            sqlalchemy.and_(
-                main.Achievement.reset_type == 1, main.Achievement.reset_value != util.get_days_since_unix(ts)
-            ),
             sqlalchemy.and_(
                 main.Achievement.reset_type == 2, main.Achievement.reset_value != util.get_weeks_since_unix(ts)
             ),
@@ -1370,7 +1451,17 @@ async def get_achievement_rewards(context: idol.BasicSchoolIdolContext, ach: mai
 
     server_data = data.get()
     old_reward_data = server_data.achievement_reward.get(ach_id, ACHIEVEMENT_REWARD_DEFAULT)
-    return [await advanced.deserialize_item_data(context, i) for i in old_reward_data]
+    rewards = [await advanced.deserialize_item_data(context, entry) for entry in old_reward_data]
+    bonus_amount = config.CONFIG_DATA.gameplay.daily_clear_bonus_loveca.get(ach_id, 0)
+    if bonus_amount:
+        bonus = item.loveca(bonus_amount)
+        for index, entry in enumerate(rewards):
+            if entry.add_type == bonus.add_type and entry.item_id == bonus.item_id:
+                rewards[index] = entry.model_copy(update={"amount": entry.amount + bonus_amount})
+                break
+        else:
+            rewards.append(bonus)
+    return rewards
 
 
 async def init(context: idol.BasicSchoolIdolContext, user: main.User):
@@ -1414,6 +1505,7 @@ async def get_achievements(
 async def get_unclaimed_achievements(
     context: idol.BasicSchoolIdolContext, /, user: main.User, accomplished_but_unclaimed_only: bool = False
 ):
+    await prepare_daily_achievements(context, user)
     q = sqlalchemy.select(main.Achievement).where(main.Achievement.user_id == user.id)
 
     if accomplished_but_unclaimed_only:
@@ -1427,6 +1519,7 @@ async def get_unclaimed_achievements(
 async def get_unclaimed_achievements_by_filter_id(
     context: idol.BasicSchoolIdolContext, user: main.User, achievement_filter_category_id: int
 ):
+    await prepare_daily_achievements(context, user)
     q = sqlalchemy.select(main.Achievement).where(
         main.Achievement.user_id == user.id,
         main.Achievement.achievement_filter_category_id == achievement_filter_category_id,
@@ -1439,6 +1532,7 @@ async def get_unclaimed_achievements_by_filter_id(
 async def get_accomplished_achievements_by_filter_id(
     context: idol.BasicSchoolIdolContext, user: main.User, achievement_filter_category_id: int
 ):
+    await prepare_daily_achievements(context, user)
     q = sqlalchemy.select(main.Achievement).where(
         main.Achievement.user_id == user.id,
         main.Achievement.achievement_filter_category_id == achievement_filter_category_id,
@@ -1455,6 +1549,7 @@ async def mark_achievement_reward_claimed(context: idol.BasicSchoolIdolContext, 
 async def get_achievement_count(
     context: idol.BasicSchoolIdolContext, user: main.User, accomplished: bool | None = None
 ):
+    await prepare_daily_achievements(context, user)
     if accomplished is not None:
         q = (
             sqlalchemy.select(sqlalchemy.func.count())
@@ -1579,6 +1674,7 @@ async def _check_impl(
 
 
 async def check(context: idol.BasicSchoolIdolContext, target_user: main.User, /, *updates):
+    await prepare_daily_achievements(context, target_user)
     container = AchievementContext()
 
     for update_instance in updates:
