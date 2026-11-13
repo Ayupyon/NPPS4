@@ -105,7 +105,7 @@ async def ranking_live(context: idol.SchoolIdolUserParams, request: RankingLiveR
     )
 
 
-@idol.register("ranking", "player")
+@idol.register("ranking", "player", xmc_verify=idol.XMCVerifyMode.SHARED_OR_CROSS)
 async def ranking_player(context: idol.SchoolIdolUserParams, request: RankingPlayerRequest) -> RankingResponse:
     current_user = await user.get_current(context)
     page = request.page

@@ -3,6 +3,7 @@ import collections.abc
 import dataclasses
 import enum
 import gzip
+import hmac
 import json
 import os
 import os.path
@@ -97,17 +98,23 @@ async def client_check(context: session.SchoolIdolParams, check_version: bool, x
         if not isinstance(context, session.SchoolIdolAuthParams):
             raise fastapi.HTTPException(422, "Invalid X-Message-Code (no token)")
 
-        if xmc_verify == idoltype.XMCVerifyMode.SHARED:
-            hmac_key = util.xorbytes(context.token.client_key, context.token.server_key)
-        elif xmc_verify == idoltype.XMCVerifyMode.CROSS:
+        hmac_keys: list[bytes] = []
+        if xmc_verify in (idoltype.XMCVerifyMode.SHARED, idoltype.XMCVerifyMode.SHARED_OR_CROSS):
+            hmac_keys.append(util.xorbytes(context.token.client_key, context.token.server_key))
+        if xmc_verify in (idoltype.XMCVerifyMode.CROSS, idoltype.XMCVerifyMode.SHARED_OR_CROSS):
             base = config.get_base_xorpad()
             appkey = config.get_application_key()
-            hmac_key = util.xorbytes(base[16:], appkey[:16]) + util.xorbytes(base[:16], appkey[16:])
-        else:
+            hmac_keys.append(util.xorbytes(base[16:], appkey[:16]) + util.xorbytes(base[:16], appkey[16:]))
+        if not hmac_keys:
             raise fastapi.HTTPException(500, "Invalid X-Message-Code verification mode")
 
-        xmc = util.hmac_sha1(context.raw_request_data, hmac_key)
-        if xmc.hex().upper() != context.x_message_code.upper():
+        supplied_code = context.x_message_code.upper().encode("utf-8")
+        if not any(
+            hmac.compare_digest(
+                util.hmac_sha1(context.raw_request_data, key).hex().upper().encode("ascii"), supplied_code
+            )
+            for key in hmac_keys
+        ):
             raise fastapi.HTTPException(422, "X-Message-Code does not match")
 
     # Client-Version check

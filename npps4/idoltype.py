@@ -17,6 +17,7 @@ class XMCVerifyMode(enum.IntEnum):
     NONE = 0
     SHARED = 1
     CROSS = 2
+    SHARED_OR_CROSS = 3
 
 
 class ReleaseInfoData(pydantic.BaseModel):
