@@ -260,18 +260,25 @@ async def decapsulate_token(context: BasicSchoolIdolContext, token_data: str):
     except itsdangerous.BadSignature:
         return None
 
-    # Get token
-    q = sqlalchemy.select(main.Session).where(main.Session.token == token)
+    now = util.time()
+    condition = main.Session.token == token
     expiry_time = config.get_session_expiry_time()
     if expiry_time > 0:
-        q = q.where(main.Session.last_accessed >= (util.time() - expiry_time))
+        condition = sqlalchemy.and_(condition, main.Session.last_accessed >= now - expiry_time)
 
-    result = await context.db.main.execute(q)
-    session = result.scalar()
+    database = context.db.main
+    sqlite = database.bind is not None and database.bind.dialect.name == "sqlite"
+    if sqlite:
+        # Update first so concurrent authentication never upgrades a stale read snapshot
+        await database.execute(
+            sqlalchemy.update(main.Session).where(condition, main.Session.last_accessed < now).values(last_accessed=now)
+        )
+    session = await database.scalar(sqlalchemy.select(main.Session).where(condition))
     if session is None:
         return None
 
-    session.last_accessed = util.time()
+    if not sqlite:
+        session.last_accessed = now
     return TokenData(client_key=session.client_key, server_key=session.server_key, user_id=session.user_id or 0)
 
 
