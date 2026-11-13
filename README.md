@@ -30,6 +30,41 @@ Install Manually
 
 Note: If you're using Termux, make sure to have Rust toolchain and remove `-r requirements-perf.txt`.
 
+Development Environment
+-----
+
+From a local checkout, use Python 3.12 or later to create and activate a virtual environment:
+
+```sh
+python -m venv .venv
+source .venv/bin/activate
+```
+
+On Windows PowerShell, activate it with `.venv\Scripts\Activate.ps1` instead.
+
+Install the runtime dependencies and Black:
+
+```sh
+python -m pip install -r requirements-dev.txt
+```
+
+For the optional performance dependencies, also install `requirements-perf.txt` as described above.
+To run the server, complete the configuration and client database setup in [Starting Up](#starting-up).
+
+Follow [CONTRIBUTE.md](CONTRIBUTE.md) when making changes. Format Python files and check their formatting with:
+
+```sh
+python -m black -l 120 .
+python -m black -l 120 --check .
+```
+
+CI also checks types with Pyright. Install Node.js and npm, then use the same Pyright version constraint as CI:
+
+```sh
+npm install -g 'pyright@>1.1.376||<1.1.376'
+pyright
+```
+
 Starting Up
 -----
 
