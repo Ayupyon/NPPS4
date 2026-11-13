@@ -184,6 +184,10 @@ live_box_drop = "external/live_box_drop.py"
 [gameplay]
 # Gameplay-related configuration
 
+# Fixed offset in minutes added to UTC to determine the game date.
+# 540 resets at midnight JST. Use 240 for 04:00 Beijing time.
+game_day_offset_minutes = 540
+
 # Multiplier for required LP consumption for live show.
 # Final energy required will be rounded towards infinity.
 # Set this to 0 to disable LP consumption.

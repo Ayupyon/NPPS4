@@ -1209,7 +1209,7 @@ class CheckLoginOnSpecificTime(AchievementChecker[AchievementUpdateLoginBonus]):
         if achievement_info.params1 is None or achievement_info.params2 is None:
             return False
 
-        dt = util.datetime()
+        dt = util.game_day_datetime()
         return achievement_info.params1 == dt.month and achievement_info.params2 == dt.day
 
     def maxvalue(self, achievement_info: achievement.Achievement) -> int:

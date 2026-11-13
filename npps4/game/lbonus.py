@@ -56,7 +56,7 @@ class LoginBonusResponse(achievement.AchievementMixin, common.TimestampMixin):
 @idol.register("lbonus", "execute", batchable=False, xmc_verify=idol.XMCVerifyMode.CROSS, exclude_none=True)
 async def lbonus_execute(context: idol.SchoolIdolUserParams) -> LoginBonusResponse:
     server_timestamp = util.time()
-    current_datetime = util.datetime(server_timestamp)
+    current_datetime = util.game_day_datetime(server_timestamp)
 
     next_year, next_month_num = current_datetime.year, current_datetime.month + 1
     if next_month_num > 12:

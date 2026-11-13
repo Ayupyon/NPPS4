@@ -96,6 +96,12 @@ def datetime(ts: int | None = None):
     return datetimelib.datetime.fromtimestamp(ts, TIMEZONE_JST)
 
 
+def game_day_datetime(ts: int | None = None):
+    ts = time() if ts is None else ts
+    offset = datetimelib.timedelta(minutes=config.CONFIG_DATA.gameplay.game_day_offset_minutes)
+    return datetimelib.datetime.fromtimestamp(ts, datetimelib.timezone(offset))
+
+
 def timestamp_to_datetime(ts: int | None = None):
     ts = time() if ts is None else ts
     dtobj = datetime(ts)
@@ -163,27 +169,31 @@ def extract_token_from_authorize(authorize: str):
     return None
 
 
-def get_next_day_timestamp(ts: int | None = None, /, *, ndays: int = 1, offset: int = OFFSET_JST):
+def get_next_day_timestamp(ts: int | None = None, /, *, ndays: int = 1, offset: int | None = None):
     if ts is None:
         ts = time()
+    if offset is None:
+        offset = config.CONFIG_DATA.gameplay.game_day_offset_minutes * 60
     day = get_days_since_unix(ts, offset=offset)
     return (day + ndays) * 86400 - offset
 
 
-def get_days_since_unix(ts: int | None = None, /, *, offset: int = OFFSET_JST):
+def get_days_since_unix(ts: int | None = None, /, *, offset: int | None = None):
     if ts is None:
         ts = time()
+    if offset is None:
+        offset = config.CONFIG_DATA.gameplay.game_day_offset_minutes * 60
     return (ts + offset) // 86400
 
 
-def get_weeks_since_unix(ts: int | None = None, /, *, offset: int = OFFSET_JST, dow: int = 1):
+def get_weeks_since_unix(ts: int | None = None, /, *, offset: int | None = None, dow: int = 1):
     day = get_days_since_unix(ts, offset=offset)
     # +4 because 1st January is Thursday
     return max((day + 4 - dow) // 7, 0)
 
 
 def get_months_since_unix(ts: int | None = None, /):
-    dt = datetime(ts)
+    dt = game_day_datetime(ts)
     return dt.month
 
 
