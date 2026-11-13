@@ -332,28 +332,42 @@ async def live_livestatus(context: idol.SchoolIdolUserParams) -> LiveStatusRespo
 async def live_schedule(context: idol.SchoolIdolUserParams) -> LiveScheduleResponse:
     ts = util.time()
     special_live_rotation = await live.get_special_live_rotation_difficulty_id(context)
-
-    return LiveScheduleResponse(
-        event_list=[],
-        live_list=[
-            LimitedLive(
-                live_difficulty_id=live_difficulty_id,
-                start_date=util.timestamp_to_datetime(util.get_next_day_timestamp(ts, ndays=0)),
-                end_date=util.timestamp_to_datetime(util.get_next_day_timestamp(ts)),
-                is_random=False,  # TODO
-            )
-            for live_difficulty_id in special_live_rotation.values()
-        ],
-        limited_bonus_list=[],
-        limited_bonus_common_list=[],
-        random_live_list=[
+    anchor = config.CONFIG_DATA.gameplay.random_live_rotation_anchor
+    if anchor is None:
+        random_live_list = [
             RandomLive(
-                attribute_id=i,
+                attribute_id=attribute,
                 start_date=util.timestamp_to_datetime(0),
                 end_date=util.timestamp_to_datetime(2147483647),
             )
-            for i in range(1, 4)
-        ],
+            for attribute in range(1, 4)
+        ]
+    else:
+        days_since_anchor = util.get_days_since_unix(ts) - util.get_days_since_unix(anchor)
+        random_live_list = [
+            RandomLive(
+                attribute_id=1 + (days_since_anchor + day) % 3,
+                start_date=util.timestamp_to_datetime(util.get_next_day_timestamp(ts, ndays=day)),
+                end_date=util.timestamp_to_datetime(util.get_next_day_timestamp(ts, ndays=day + 1) - 1),
+            )
+            for day in range(7)
+        ]
+
+    live_list = [
+        LimitedLive(
+            live_difficulty_id=live_difficulty_id,
+            start_date=util.timestamp_to_datetime(util.get_next_day_timestamp(ts, ndays=0)),
+            end_date=util.timestamp_to_datetime(util.get_next_day_timestamp(ts)),
+            is_random=False,
+        )
+        for live_difficulty_id in special_live_rotation.values()
+    ]
+    return LiveScheduleResponse(
+        event_list=[],
+        live_list=live_list,
+        limited_bonus_list=[],
+        limited_bonus_common_list=[],
+        random_live_list=random_live_list,
         free_live_list=[],
         training_live_list=[],
     )

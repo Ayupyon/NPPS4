@@ -188,6 +188,9 @@ live_box_drop = "external/live_box_drop.py"
 # 540 resets at midnight JST. Use 240 for 04:00 Beijing time.
 game_day_offset_minutes = 540
 
+# Unix timestamp within the game day that starts the red/green/blue rotation.
+# random_live_rotation_anchor = 1794254400
+
 # Multiplier for required LP consumption for live show.
 # Final energy required will be rounded towards infinity.
 # Set this to 0 to disable LP consumption.
