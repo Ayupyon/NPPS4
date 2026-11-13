@@ -167,7 +167,7 @@ login_bonus = ""
 # Path is relative to the project root directory.
 # Note: The file path is not configurable in Android.
 # Environment Variable: NPPS4_CONFIG_GAME_BEATMAPS
-beatmaps = "external/beatmap.py"
+beatmaps = ""
 
 # Specify Live Show! unit drop script.
 # Path is relative to the project root directory.

@@ -159,15 +159,17 @@ def get_beatmap_provider_protocol():
     global _beatmap_provider_module
 
     if _beatmap_provider_module is None:
-        _beatmap_provider_module = cast(
-            cfgtype.BeatmapProviderProtocol, load_module_from_file(BEATMAP_PROVIDER_FILE, "external.beatmap")
-        )
+        if filename := CONFIG_DATA.game.beatmaps:
+            _beatmap_provider_module = load_module_from_file(os.path.join(ROOT_DIR, filename), "external.beatmap")
+        else:
+            from ..system import beatmap
+
+            _beatmap_provider_module = beatmap
 
     return _beatmap_provider_module
 
 
-LIVE_UNIT_DROP_FILE = os.path.join(ROOT_DIR, CONFIG_DATA.game.live_unit_drop)
-_live_unit_drop_module = None
+_live_unit_drop_module: cfgtype.LiveUnitDropProtocol | None = None
 
 
 def get_live_unit_drop_protocol():
