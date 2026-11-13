@@ -1,0 +1,308 @@
+{
+  "assets/image/secretbox/destiny/201308-uniform-nico127-nozomi134-v1/tx_scouting.texb": {
+    "path": "retro-scouting/201308-uniform-nico127-nozomi134-v1/assets/image/secretbox/destiny/201308-uniform-nico127-nozomi134-v1/tx_scouting.texb",
+    "size": 3283420,
+    "md5": "ff823eeb6c9356f0af3a5213b699517c",
+    "sha256": "4ab69c8b555a8390ff13b94ba53526978f9e10a3ca3676152bafc5a324ab2cf3"
+  },
+  "assets/image/secretbox/destiny/201308-uniform-nico127-nozomi134-v1/scouting.png.imag": {
+    "path": "retro-scouting/201308-uniform-nico127-nozomi134-v1/assets/image/secretbox/destiny/201308-uniform-nico127-nozomi134-v1/scouting.png.imag",
+    "size": 108,
+    "md5": "1528691443d9daf4dc6de9afd6609114",
+    "sha256": "834a0a32c2b086ed7f8bf65ff02caab5633d215a45290e12eb3c06ad6d955693"
+  },
+  "assets/image/secretbox/destiny/201308-uniform-nico127-nozomi134-v1/tx_banner.texb": {
+    "path": "retro-scouting/201308-uniform-nico127-nozomi134-v1/assets/image/secretbox/destiny/201308-uniform-nico127-nozomi134-v1/tx_banner.texb",
+    "size": 3823995,
+    "md5": "bfb7e516488e6c63b9bd0fc658ec92be",
+    "sha256": "d2566f45920f3624e1b36edeb70bd59e0621d436633105a354721aed0de40ca8"
+  },
+  "assets/image/secretbox/destiny/201308-uniform-nico127-nozomi134-v1/banner.png.imag": {
+    "path": "retro-scouting/201308-uniform-nico127-nozomi134-v1/assets/image/secretbox/destiny/201308-uniform-nico127-nozomi134-v1/banner.png.imag",
+    "size": 106,
+    "md5": "aa506eb9bcae54eb9199a08de85df20a",
+    "sha256": "5d3405d84cec7889b6beb9247090a523fe6169d8d1d00b9179bc677480dce2cb"
+  },
+  "assets/image/secretbox/destiny/201308-uniform-nico127-nozomi134-v1/tx_blank.texb": {
+    "path": "retro-scouting/201308-uniform-nico127-nozomi134-v1/assets/image/secretbox/destiny/201308-uniform-nico127-nozomi134-v1/tx_blank.texb",
+    "size": 319,
+    "md5": "43495314056b2f4d56860835a99d70b9",
+    "sha256": "a07c408803aa6694d6e2c5bc3fbaa0ce8ac1b6d93a023c7a9c78f2c3c753fd3d"
+  },
+  "assets/image/secretbox/destiny/201308-uniform-nico127-nozomi134-v1/blank.png.imag": {
+    "path": "retro-scouting/201308-uniform-nico127-nozomi134-v1/assets/image/secretbox/destiny/201308-uniform-nico127-nozomi134-v1/blank.png.imag",
+    "size": 105,
+    "md5": "fb6e5e1e0551daeeae50f15c2d11c98b",
+    "sha256": "404fa6b9ff339cef83d5a837d0ebcf5565ccb883ecfe8a38e34108613f382218"
+  },
+  "assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/template-296af8803975/tx_scouting.texb": {
+    "path": "retro-scouting/template-296af8803975/assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/template-296af8803975/tx_scouting.texb",
+    "size": 636215,
+    "md5": "5f0a5cab079386a78509384fbb46216a",
+    "sha256": "bc5ba4bbe219ab372bfa79339458825c2fe72a0cdb0655f3a0bf257d5c30c55f"
+  },
+  "assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/template-296af8803975/scouting.png.imag": {
+    "path": "retro-scouting/template-296af8803975/assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/template-296af8803975/scouting.png.imag",
+    "size": 138,
+    "md5": "fc65fc8727d4fb8abf00dc427b6794fe",
+    "sha256": "63b1d9c3fb9567503b933d0fce053036b92413b4d0a6d28804c8c1d59373458f"
+  },
+  "assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/template-296af8803975/tx_banner.texb": {
+    "path": "retro-scouting/template-296af8803975/assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/template-296af8803975/tx_banner.texb",
+    "size": 159246,
+    "md5": "d6839efb872909f438701ba33b7780e8",
+    "sha256": "bcdc198c02702e6c5e00a3ecd00b41ffd565177ab8ebf26784a171ca0e5a50f5"
+  },
+  "assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/template-296af8803975/banner.png.imag": {
+    "path": "retro-scouting/template-296af8803975/assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/template-296af8803975/banner.png.imag",
+    "size": 136,
+    "md5": "bd7485553cf3c1030bd8c00aa63bf81c",
+    "sha256": "52f17c34fc1fa7f2a65b486d13179a69e79386fa35e0da2f12b4599123adcdea"
+  },
+  "assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/template-296af8803975/tx_title_blank.texb": {
+    "path": "retro-scouting/template-296af8803975/assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/template-296af8803975/tx_title_blank.texb",
+    "size": 391,
+    "md5": "609413c168823800c8504e617e463f84",
+    "sha256": "dc1e101ef9561bcb4047c936308cce5b40ccdb43f10c129539c54f9a9ef6acec"
+  },
+  "assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/template-296af8803975/title_blank.png.imag": {
+    "path": "retro-scouting/template-296af8803975/assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/template-296af8803975/title_blank.png.imag",
+    "size": 141,
+    "md5": "2fa7f8092f92330349c889ee7cf6239f",
+    "sha256": "a19499c098f61ea790047b856719dd2bd0c61350f6fcf6400035e7cddc32ad83"
+  },
+  "assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/template-296af8803975/tx_appeal_blank.texb": {
+    "path": "retro-scouting/template-296af8803975/assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/template-296af8803975/tx_appeal_blank.texb",
+    "size": 393,
+    "md5": "4616a63627a3b789a32b4c08711e076e",
+    "sha256": "9ff0200340939e2b3123d50290ae8d09224b07a8b403c17da1fa8486151c8a01"
+  },
+  "assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/template-296af8803975/appeal_blank.png.imag": {
+    "path": "retro-scouting/template-296af8803975/assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/template-296af8803975/appeal_blank.png.imag",
+    "size": 142,
+    "md5": "293f7addc0b37b34cb4122823320deec",
+    "sha256": "1918eafba93e0e8f150c6f9098e8e1a3d42b2b92af928ad1740eee2ea440bbee"
+  },
+  "assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/safe128-296af8803975/tx_scouting.texb": {
+    "path": "retro-scouting/safe128-296af8803975/assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/safe128-296af8803975/tx_scouting.texb",
+    "size": 636213,
+    "md5": "074ba74b430c05b0367ea06e664c4ce9",
+    "sha256": "3b716e879d4a88f24c7ec42652a7bba3b76c3a2b64f35d1d8f077240225be7ec"
+  },
+  "assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/safe128-296af8803975/scouting.png.imag": {
+    "path": "retro-scouting/safe128-296af8803975/assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/safe128-296af8803975/scouting.png.imag",
+    "size": 137,
+    "md5": "fb343a083cadbf7740852f681a3ce979",
+    "sha256": "1f35c78fdfec75e4a7a339d28669554899f0d9dd2fbfa1a336cc4fd5f5bbd6c3"
+  },
+  "assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/safe128-296af8803975/tx_banner.texb": {
+    "path": "retro-scouting/safe128-296af8803975/assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/safe128-296af8803975/tx_banner.texb",
+    "size": 159244,
+    "md5": "ccf2b66f65958214dcc45ea3081b0b65",
+    "sha256": "a31f6ba09d451d60299a97150203de2a75daac8e31e575da6ce152eb7451a3b2"
+  },
+  "assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/safe128-296af8803975/banner.png.imag": {
+    "path": "retro-scouting/safe128-296af8803975/assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/safe128-296af8803975/banner.png.imag",
+    "size": 135,
+    "md5": "e19735bd463a65701160f91e24b9f2c7",
+    "sha256": "fa0aba3c9a2cffee9aac9b3968f2d431a9e79dd1624923d230e8b35b7f567b52"
+  },
+  "assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/safe128-296af8803975/tx_title_blank.texb": {
+    "path": "retro-scouting/safe128-296af8803975/assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/safe128-296af8803975/tx_title_blank.texb",
+    "size": 461,
+    "md5": "6f03957ac3f31a8a676c360e39e87d5e",
+    "sha256": "72d8e01ecbe3da667f97ff957788dfd92a420bd5f4b52516e001823f385e10dd"
+  },
+  "assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/safe128-296af8803975/title_blank.png.imag": {
+    "path": "retro-scouting/safe128-296af8803975/assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/safe128-296af8803975/title_blank.png.imag",
+    "size": 140,
+    "md5": "3405e8e9f7f2d1ab17722c2ffe0dcd65",
+    "sha256": "41f39d5d15537048fbf5cdbe722dc80a5f02d1146a8492f4d9390783ea968b00"
+  },
+  "assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/safe128-296af8803975/tx_appeal_blank.texb": {
+    "path": "retro-scouting/safe128-296af8803975/assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/safe128-296af8803975/tx_appeal_blank.texb",
+    "size": 463,
+    "md5": "8c58551471f3eb1d7ce78a108af61311",
+    "sha256": "da2deb438472795e25aaf86b68af6a8be4c7cb70dd7a24eb43d929e99f567fd1"
+  },
+  "assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/safe128-296af8803975/appeal_blank.png.imag": {
+    "path": "retro-scouting/safe128-296af8803975/assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/safe128-296af8803975/appeal_blank.png.imag",
+    "size": 141,
+    "md5": "c8acebd7e9f14f955d8891e709b8703f",
+    "sha256": "6d751520684611d19f83b0b764871476e67cc81dcc98d52b10034863c3e243e2"
+  },
+  "assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/foreground-v2-87d6e8623d42/tx_scouting.texb": {
+    "path": "retro-scouting/foreground-v2-87d6e8623d42/assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/foreground-v2-87d6e8623d42/tx_scouting.texb",
+    "size": 726857,
+    "md5": "d1e115882a0ee5596afa9a83d539dc70",
+    "sha256": "da81688c9544167997e49aac9be5b67b7f4dff7190020e985199c73a927aef1d"
+  },
+  "assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/foreground-v2-87d6e8623d42/scouting.png.imag": {
+    "path": "retro-scouting/foreground-v2-87d6e8623d42/assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/foreground-v2-87d6e8623d42/scouting.png.imag",
+    "size": 143,
+    "md5": "9d5025a4f9ac082aa881fe1c69397cc5",
+    "sha256": "864d318d0015f3c431e21193ff848290ebf1da233a933c99194894449abb117c"
+  },
+  "assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/foreground-v2-87d6e8623d42/tx_banner.texb": {
+    "path": "retro-scouting/foreground-v2-87d6e8623d42/assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/foreground-v2-87d6e8623d42/tx_banner.texb",
+    "size": 168290,
+    "md5": "962dd5c5dabba697c6c6c21dab85b730",
+    "sha256": "07c0cb593359f6216ca6486631756e175454c4902b4cbc5cb931cafdcef37be2"
+  },
+  "assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/foreground-v2-87d6e8623d42/banner.png.imag": {
+    "path": "retro-scouting/foreground-v2-87d6e8623d42/assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/foreground-v2-87d6e8623d42/banner.png.imag",
+    "size": 141,
+    "md5": "2d67a1eb12d25c8a69b7a0537d467ae1",
+    "sha256": "a9106ed11bc7882d8ae057a1f79844e6243b142ae7e2d6f201c0280e0a000187"
+  },
+  "assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/foreground-v2-87d6e8623d42/tx_navi_blank.texb": {
+    "path": "retro-scouting/foreground-v2-87d6e8623d42/assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/foreground-v2-87d6e8623d42/tx_navi_blank.texb",
+    "size": 471,
+    "md5": "719bbd7d46dd5c652f7db18c509d258f",
+    "sha256": "30397d1a3de6f4f3672d5c3ecee45907fd579f6c224dfcf2c6cdf0b45a358493"
+  },
+  "assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/foreground-v2-87d6e8623d42/navi_blank.png.imag": {
+    "path": "retro-scouting/foreground-v2-87d6e8623d42/assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/foreground-v2-87d6e8623d42/navi_blank.png.imag",
+    "size": 145,
+    "md5": "011ae1501b246e984ae3103a4239c667",
+    "sha256": "a14e12ac559ffde0f41cb707475b9e9974307d5f7aae015c2f4161561313756c"
+  },
+  "assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/foreground-v2-87d6e8623d42/tx_appeal_blank.texb": {
+    "path": "retro-scouting/foreground-v2-87d6e8623d42/assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/foreground-v2-87d6e8623d42/tx_appeal_blank.texb",
+    "size": 475,
+    "md5": "99ae7df53d414afa20ef8b71b5d9a62d",
+    "sha256": "83cb2b0f0122a17227c39c6297081b1b28ae199dfe35cfea1b8d8df09ff30eee"
+  },
+  "assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/foreground-v2-87d6e8623d42/appeal_blank.png.imag": {
+    "path": "retro-scouting/foreground-v2-87d6e8623d42/assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/foreground-v2-87d6e8623d42/appeal_blank.png.imag",
+    "size": 147,
+    "md5": "f299b67a8844b6c1d1b1149a78f1bf13",
+    "sha256": "3f5d16138bc9f55b834ad698874e8910e314a42f0ec2286e702db5aa7d012e7d"
+  },
+  "assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/foreground-v3-3818c3af4ff5/tx_page_menu.texb": {
+    "path": "retro-scouting/foreground-v3-3818c3af4ff5/assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/foreground-v3-3818c3af4ff5/tx_page_menu.texb",
+    "size": 895076,
+    "md5": "97843e2b99a619e5631478f6ee227a6e",
+    "sha256": "ae5e72f7c05a11826c69c2a854767328590f5820c90056f6663abbf1b5261bf6"
+  },
+  "assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/foreground-v3-3818c3af4ff5/scouting.png.imag": {
+    "path": "retro-scouting/foreground-v3-3818c3af4ff5/assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/foreground-v3-3818c3af4ff5/scouting.png.imag",
+    "size": 144,
+    "md5": "1408710581fd5926f6b72d9a786a8a97",
+    "sha256": "27cca687c50ebe899516333d16cc1f298959bdeee9165c6b82dbdf3417d4b8b7"
+  },
+  "assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/foreground-v3-3818c3af4ff5/banner.png.imag": {
+    "path": "retro-scouting/foreground-v3-3818c3af4ff5/assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/foreground-v3-3818c3af4ff5/banner.png.imag",
+    "size": 144,
+    "md5": "3b3e926556c8b1af7cf52184de249b91",
+    "sha256": "99cfd6790707a152319dfa130f1007a91b57767a295686786f88238963a3ff6d"
+  },
+  "assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/foreground-v3-3818c3af4ff5/tx_navi_blank.texb": {
+    "path": "retro-scouting/foreground-v3-3818c3af4ff5/assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/foreground-v3-3818c3af4ff5/tx_navi_blank.texb",
+    "size": 471,
+    "md5": "bade699bd28fc77aea6819b7b9c58223",
+    "sha256": "e96cab934c181a650691632d2de89ec0c1e6b1991829bd80d46dc79e81153ef8"
+  },
+  "assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/foreground-v3-3818c3af4ff5/navi_blank.png.imag": {
+    "path": "retro-scouting/foreground-v3-3818c3af4ff5/assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/foreground-v3-3818c3af4ff5/navi_blank.png.imag",
+    "size": 145,
+    "md5": "b8933bafa0071b00a769c29362698314",
+    "sha256": "9e36e54d9b7e4d75e402e233eb80b212a3aa5b4c960885e8a3a353503ba75812"
+  },
+  "assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/foreground-v3-3818c3af4ff5/tx_appeal_blank.texb": {
+    "path": "retro-scouting/foreground-v3-3818c3af4ff5/assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/foreground-v3-3818c3af4ff5/tx_appeal_blank.texb",
+    "size": 475,
+    "md5": "457b0cc680bf1d0050c19a60db94cd66",
+    "sha256": "493d80be99c9a9b6a8dc52662fe7f06c1e14eab882d4ef4676cd9ece4bd89706"
+  },
+  "assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/foreground-v3-3818c3af4ff5/appeal_blank.png.imag": {
+    "path": "retro-scouting/foreground-v3-3818c3af4ff5/assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/foreground-v3-3818c3af4ff5/appeal_blank.png.imag",
+    "size": 147,
+    "md5": "3ae23542ec3aaa8ecd480137f7c46d6b",
+    "sha256": "c536aa852dbf3a29da4e6321abe8da49437cf7f514a091af86f73d4fe05769d3"
+  },
+  "assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/foreground-v3-1c38267f980b/tx_page_menu.texb": {
+    "path": "retro-scouting/foreground-v3-1c38267f980b/assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/foreground-v3-1c38267f980b/tx_page_menu.texb",
+    "size": 894016,
+    "md5": "0ae8f195f677e134c5aaf71483374f49",
+    "sha256": "6815615a29ac8d3b5c087321193c414b953f17a99d18c33039f02ddb7ff3fdb6"
+  },
+  "assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/foreground-v3-1c38267f980b/scouting.png.imag": {
+    "path": "retro-scouting/foreground-v3-1c38267f980b/assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/foreground-v3-1c38267f980b/scouting.png.imag",
+    "size": 144,
+    "md5": "f73f418a2a9c852a37df7453103c75d2",
+    "sha256": "8d4710b39123b2906f6836bf36cdd8951285f8d7f6b727a7f0bf47835346246b"
+  },
+  "assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/foreground-v3-1c38267f980b/banner.png.imag": {
+    "path": "retro-scouting/foreground-v3-1c38267f980b/assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/foreground-v3-1c38267f980b/banner.png.imag",
+    "size": 144,
+    "md5": "3a72251bd35abae5262fc467cb0e8d35",
+    "sha256": "1e055c98a8aa4ee02d9dc655cff578b4ee69a17276e4ce381ff62eea3aac1d77"
+  },
+  "assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/foreground-v3-1c38267f980b/tx_navi_blank.texb": {
+    "path": "retro-scouting/foreground-v3-1c38267f980b/assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/foreground-v3-1c38267f980b/tx_navi_blank.texb",
+    "size": 471,
+    "md5": "b38a66b7eb02130d14695d7319d3bee7",
+    "sha256": "09a6d939e921a21af7257aa42ec147875e3d82e70ed2b2713ad0615b20c60813"
+  },
+  "assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/foreground-v3-1c38267f980b/navi_blank.png.imag": {
+    "path": "retro-scouting/foreground-v3-1c38267f980b/assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/foreground-v3-1c38267f980b/navi_blank.png.imag",
+    "size": 145,
+    "md5": "9bd32fc0060d0a39f3da6dfe2bcc5d51",
+    "sha256": "fe9b346a824ec3c326111f69675a59657fca642af4d21cdbab3ae3fb2aad4e27"
+  },
+  "assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/foreground-v3-1c38267f980b/tx_appeal_blank.texb": {
+    "path": "retro-scouting/foreground-v3-1c38267f980b/assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/foreground-v3-1c38267f980b/tx_appeal_blank.texb",
+    "size": 475,
+    "md5": "36052c6360b7c2fb7b8003c0451b54c6",
+    "sha256": "d46dd80d47d37df82b7b5d13391e449abecee9ec06b26642411a6d2578df9e1a"
+  },
+  "assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/foreground-v3-1c38267f980b/appeal_blank.png.imag": {
+    "path": "retro-scouting/foreground-v3-1c38267f980b/assets/image/secretbox/destiny/destiny-201308-uniform-nico127-nozomi134-v1/foreground-v3-1c38267f980b/appeal_blank.png.imag",
+    "size": 147,
+    "md5": "f2bbd92109c8b979de146692dd67716e",
+    "sha256": "3b1eaea690dacd2adf9bfa38a515aaa320f150e851c3e5df38009de975dc9f6c"
+  },
+  "assets/image/secretbox/destiny/honor-myus/foreground-v3-6439827fb20b/tx_page_menu.texb": {
+    "path": "retro-scouting/foreground-v3-6439827fb20b/assets/image/secretbox/destiny/honor-myus/foreground-v3-6439827fb20b/tx_page_menu.texb",
+    "size": 835203,
+    "md5": "20ca6bbc3fc7154815e528802a134590",
+    "sha256": "e96715aae26a3d6647d9df6aaeff827aa7974e9f9d43ad3ac5aabca0d7f26ca8"
+  },
+  "assets/image/secretbox/destiny/honor-myus/foreground-v3-6439827fb20b/scouting.png.imag": {
+    "path": "retro-scouting/foreground-v3-6439827fb20b/assets/image/secretbox/destiny/honor-myus/foreground-v3-6439827fb20b/scouting.png.imag",
+    "size": 111,
+    "md5": "6f254bf4fdfc39fe6dbaa331283caaa8",
+    "sha256": "6f8466fe6a14e3ea7b91222da6322383f527942fc22f2c54c226c0f91151279c"
+  },
+  "assets/image/secretbox/destiny/honor-myus/foreground-v3-6439827fb20b/banner.png.imag": {
+    "path": "retro-scouting/foreground-v3-6439827fb20b/assets/image/secretbox/destiny/honor-myus/foreground-v3-6439827fb20b/banner.png.imag",
+    "size": 111,
+    "md5": "15abf3df40846191329fffbe2eb5fbcf",
+    "sha256": "6e5fe5038eb8c4b312316dcd0dfa6b5a0e81194170118b463bc366d6103e117f"
+  },
+  "assets/image/secretbox/destiny/honor-myus/foreground-v3-6439827fb20b/tx_navi_blank.texb": {
+    "path": "retro-scouting/foreground-v3-6439827fb20b/assets/image/secretbox/destiny/honor-myus/foreground-v3-6439827fb20b/tx_navi_blank.texb",
+    "size": 405,
+    "md5": "a78d73fc95a88747714fd32aef941c66",
+    "sha256": "0fea5f4cdb028eb160be08898ee5f509ed972595a7554983be2fef4e4365e810"
+  },
+  "assets/image/secretbox/destiny/honor-myus/foreground-v3-6439827fb20b/navi_blank.png.imag": {
+    "path": "retro-scouting/foreground-v3-6439827fb20b/assets/image/secretbox/destiny/honor-myus/foreground-v3-6439827fb20b/navi_blank.png.imag",
+    "size": 112,
+    "md5": "c6d1ac7ee1e74c6e6fcc24e338084a7c",
+    "sha256": "ac40da63993768cff3ad44c89ac29362694451d25cdd5ea5abbf09e8d0f7b253"
+  },
+  "assets/image/secretbox/destiny/honor-myus/foreground-v3-6439827fb20b/tx_appeal_blank.texb": {
+    "path": "retro-scouting/foreground-v3-6439827fb20b/assets/image/secretbox/destiny/honor-myus/foreground-v3-6439827fb20b/tx_appeal_blank.texb",
+    "size": 409,
+    "md5": "c9b69c42f6629718d1e47794b2a31080",
+    "sha256": "681a24ce04073eeccfce6ed201ebe23247c804244317b51507e4938ccd96a39a"
+  },
+  "assets/image/secretbox/destiny/honor-myus/foreground-v3-6439827fb20b/appeal_blank.png.imag": {
+    "path": "retro-scouting/foreground-v3-6439827fb20b/assets/image/secretbox/destiny/honor-myus/foreground-v3-6439827fb20b/appeal_blank.png.imag",
+    "size": 114,
+    "md5": "51488baa7bcbc3ba2f9991538a475a84",
+    "sha256": "6cb582fc5b72c898a74c42ba0b84ec49654356ae3d22fcd4e6ccde33b977172c"
+  }
+}
