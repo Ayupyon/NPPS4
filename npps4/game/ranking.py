@@ -4,6 +4,7 @@ from . import models
 from .. import idol
 from .. import util
 from ..system import common
+from ..system import marathon
 from ..system import ranking
 from ..system import reward
 from ..system import unit
@@ -182,3 +183,28 @@ async def ranking_player(context: idol.SchoolIdolUserParams, request: RankingPla
         total_cnt=total_count,
         present_cnt=await reward.count_presentbox(context, current_user),
     )
+
+
+@idol.register("ranking", "eventPlayer", batchable=False)
+async def ranking_rank_point(context: idol.SchoolIdolUserParams, request: marathon.RankRequest) -> marathon.Wire:
+    return await marathon.rank_point(context, request)
+
+
+@idol.register("ranking", "eventLive", batchable=False)
+async def ranking_rank_score(context: idol.SchoolIdolUserParams, request: marathon.RankRequest) -> marathon.Wire:
+    return await marathon.rank_score(context, request)
+
+
+@idol.register("ranking", "eventLiveDetail", batchable=False)
+async def ranking_rank_detail(context: idol.SchoolIdolUserParams, request: marathon.DetailRequest) -> marathon.Wire:
+    return await marathon.rank_detail(context, request)
+
+
+@idol.register("ranking", "eventFriendPlayer", batchable=False)
+async def ranking_rank_friend_point(context: idol.SchoolIdolUserParams, request: marathon.RankRequest) -> marathon.Wire:
+    return await marathon.rank_friend_point(context, request)
+
+
+@idol.register("ranking", "eventFriendLive", batchable=False)
+async def ranking_rank_friend_score(context: idol.SchoolIdolUserParams, request: marathon.RankRequest) -> marathon.Wire:
+    return await marathon.rank_friend_score(context, request)

@@ -8,8 +8,10 @@ import sqlalchemy
 import pydantic
 
 from . import common
+from . import event_song_goal
 from . import item
 from . import live_model
+from . import marathon
 from .. import const
 from .. import db
 from .. import idol
@@ -19,7 +21,6 @@ from ..db import main
 from ..db import live
 
 from typing import Any, Literal, cast, overload
-
 
 async def unlock_normal_live(context: idol.BasicSchoolIdolContext, user: main.User, live_track_id: int):
     q = sqlalchemy.select(main.NormalLiveUnlock).where(
@@ -64,8 +65,16 @@ async def get_live_clear_data(
 async def get_live_clear_data(
     context: idol.BasicSchoolIdolContext, /, user: main.User, live_difficulty_id: int, ensure: bool = False
 ):
+    active = context.get_cache("marathon", "period")
+    if active is None and marathon.enabled() and marathon.reserved_song(live_difficulty_id):
+        active = await marathon.period(context)
+    record, rule = active if active is not None else (None, None)
+    storage_id = live_difficulty_id
+    if record is not None and marathon.song_for(rule, live_difficulty_id) is not None:
+        storage_id = -(record["id"] * 100000 + live_difficulty_id)
+
     q = sqlalchemy.select(main.LiveClear).where(
-        main.LiveClear.user_id == user.id, main.LiveClear.live_difficulty_id == live_difficulty_id
+        main.LiveClear.user_id == user.id, main.LiveClear.live_difficulty_id == storage_id
     )
     result = await context.db.main.execute(q)
     live_clear = result.scalar()
@@ -76,7 +85,7 @@ async def get_live_clear_data(
             raise ValueError("invalid live_difficulty_id")
 
         live_clear = main.LiveClear(
-            user_id=user.id, live_difficulty_id=live_difficulty_id, difficulty=live_setting_info.difficulty
+            user_id=user.id, live_difficulty_id=storage_id, difficulty=live_setting_info.difficulty
         )
         context.db.main.add(live_clear)
         await context.db.main.flush()
@@ -162,8 +171,32 @@ async def get_normal_live_clear_status_of_track(
     return live_status_result
 
 
-@common.context_cacheable("live_info")
 async def get_live_info_table(context: idol.BasicSchoolIdolContext, live_difficulty_id: int, /):
+    active = context.get_cache("marathon", "period")
+    rule = active[1] if active is not None else None
+    if active is None and marathon.enabled() and marathon.reserved_song(live_difficulty_id):
+        current = marathon.current_period()
+        if current is not None:
+            rule = marathon.event_charts.effective_period(context, current, marathon.get_policy()["periods"])
+    song = marathon.song_for(rule, live_difficulty_id)
+    if song is not None:
+        free = bool(context.get_cache("marathon", "free_token"))
+        return live.SpecialLive(
+            live_difficulty_id=live_difficulty_id,
+            live_setting_id=song["setting_id"],
+            capital_type=1 if free else 2,
+            capital_value=0 if free else song["cost"],
+            c_rank_complete=1,
+            b_rank_complete=2,
+            a_rank_complete=3,
+            s_rank_complete=5,
+        )
+
+    return await get_client_live_info(context, live_difficulty_id)
+
+
+@common.context_cacheable("live_info")
+async def get_client_live_info(context: idol.BasicSchoolIdolContext, live_difficulty_id: int, /):
     live_info = await context.db.live.get(live.SpecialLive, live_difficulty_id)
     if live_info is None:
         live_info = await context.db.live.get(live.NormalLive, live_difficulty_id)
@@ -194,6 +227,15 @@ async def get_live_setting_from_difficulty_id(context: idol.BasicSchoolIdolConte
 
 
 async def get_live_info(context: idol.BasicSchoolIdolContext, live_difficulty_id: int, live_setting: live.LiveSetting):
+    issued = context.get_cache("marathon", "issued_notes")
+    if issued is not None and issued[0] == live_difficulty_id:
+        return live_model.LiveInfoWithNotes(
+            live_difficulty_id=live_difficulty_id,
+            ac_flag=live_setting.ac_flag,
+            swing_flag=live_setting.swing_flag,
+            notes_list=[live_model.LiveNote.model_validate(note) for note in issued[1]],
+        )
+
     beatmap_protocol = config.get_beatmap_provider_protocol()
     beatmap_data = await beatmap_protocol.get_beatmap_data(live_setting.notes_setting_asset, context)
     if beatmap_data is None:
@@ -286,6 +328,8 @@ def get_live_ranks(live_info: live.CommonLive, live_setting: live.LiveSetting, s
 
 
 async def get_achieved_goal_id_list(context: idol.BasicSchoolIdolContext, clear_info: main.LiveClear):
+    if clear_info.live_difficulty_id < 0:
+        return await event_song_goal.achieved(context, clear_info)
     live_info = await get_live_info_table(context, clear_info.live_difficulty_id)
     result: list[int] = []
     if live_info is not None:
@@ -396,6 +440,8 @@ async def register_live_in_progress(
         )
         context.db.main.add(wip)
     else:
+        if await marathon.live_run(context, user.id) is not None:
+            marathon.reject("a Marathon live is already in progress; resume or abandon it")
         await context.db.main.execute(
             sqlalchemy.delete(main.DestinyRewardEggLive).where(main.DestinyRewardEggLive.user_id == user.id)
         )
@@ -637,6 +683,13 @@ async def get_cleared_live_count(context: idol.BasicSchoolIdolContext, /, user: 
 @common.context_cacheable("adjacent_live_difficulty_id")
 async def get_enh_live_difficulty_ids(context: idol.BasicSchoolIdolContext, /, live_difficulty_id: int):
     output: dict[int, int] = {}
+    active = context.get_cache("marathon", "period")
+    if active is not None and marathon.song_for(active[1], live_difficulty_id) is not None:
+        for song in active[1]["songs"]:
+            setting = await get_live_setting(context, song["setting_id"])
+            if setting is not None:
+                output[setting.difficulty] = song["id"]
+        return output
 
     live_info_base = await get_live_info_table(context, live_difficulty_id)
     if live_info_base is None:

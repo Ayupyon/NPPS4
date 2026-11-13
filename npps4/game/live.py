@@ -11,6 +11,7 @@ from .. import idol
 from .. import util
 from ..config import config
 from ..db import main
+from ..download import event_presentation
 from ..system import achievement
 from ..system import advanced
 from ..system import class_system as class_system_module
@@ -19,6 +20,7 @@ from ..system import effort
 from ..system import item
 from ..system import live
 from ..system import live_model
+from ..system import marathon
 from ..system import master_challenge
 from ..system import museum
 from ..system import ranking
@@ -34,6 +36,8 @@ from typing import Any
 
 
 class EventInfo(pydantic.BaseModel):
+    model_config = pydantic.ConfigDict(extra="allow")
+
     event_id: int
     event_category_id: int
     name: str
@@ -74,20 +78,21 @@ class TrainingLive(pydantic.BaseModel):
 
 
 class LiveScheduleResponse(pydantic.BaseModel):
-    event_list: list[EventInfo]
+    event_list: list[EventInfo | dict[str, Any]]
     live_list: list[LimitedLive]
     limited_bonus_list: list
     limited_bonus_common_list: list[LimitedLiveBonus]
     random_live_list: list[RandomLive]
     free_live_list: list
     training_live_list: list[TrainingLive]
+    event_presentation_protocol: int | None = None
 
 
 class LiveStatusResponse(pydantic.BaseModel):
     normal_live_status_list: list[live_model.LiveStatus]
     special_live_status_list: list[live_model.LiveStatus]
     training_live_status_list: list[live_model.LiveStatus]
-    marathon_live_status_list: list
+    marathon_live_status_list: list[live_model.LiveStatus]
     free_live_status_list: list
     can_resume_live: bool
 
@@ -321,20 +326,30 @@ class LiveRewardResponse(achievement.AchievementMixin, common.TimestampMixin, us
 
 @idol.register("live", "liveStatus")
 async def live_livestatus(context: idol.SchoolIdolUserParams) -> LiveStatusResponse:
+    event_status = []
+    event_row, event_rule = await marathon.visible_period(context)
     current_user = await user.get_current(context)
+    if event_rule and marathon.active_period(event_rule):
+        with marathon.live_scope(context):
+            marathon.set_live_context(context, event_row, event_rule)
+            for song in event_rule["songs"]:
+                difficulty_id = song["id"]
+                clear = await live.get_live_clear_data(context, current_user, difficulty_id)
+                event_status.append(await live.live_status_from_live_clear(context, difficulty_id, clear))
     return LiveStatusResponse(
         normal_live_status_list=await live.get_normal_live_clear_status(context, current_user),
         special_live_status_list=await live.get_special_live_status(context, current_user),
         training_live_status_list=await live.get_training_live_status(context, current_user),
-        marathon_live_status_list=[],
+        marathon_live_status_list=event_status,
         free_live_status_list=[],
         can_resume_live=True,
     )
 
 
-@idol.register("live", "schedule")
+@idol.register("live", "schedule", exclude_none=True)
 async def live_schedule(context: idol.SchoolIdolUserParams) -> LiveScheduleResponse:
     ts = util.time()
+    _, event_rule = await marathon.visible_period(context)
     special_live_rotation = await live.get_special_live_rotation_difficulty_id(context)
     anchor = config.CONFIG_DATA.gameplay.random_live_rotation_anchor
     if anchor is None:
@@ -366,14 +381,25 @@ async def live_schedule(context: idol.SchoolIdolUserParams) -> LiveScheduleRespo
         )
         for live_difficulty_id in special_live_rotation.values()
     ]
+    if event_rule and marathon.active_period(event_rule):
+        live_list.extend(
+            LimitedLive(
+                live_difficulty_id=song["id"],
+                start_date=util.timestamp_to_datetime(marathon.timestamp(event_rule["start"])),
+                end_date=util.timestamp_to_datetime(marathon.timestamp(event_rule["end"])),
+                is_random=False,
+            )
+            for song in event_rule["songs"]
+        )
     return LiveScheduleResponse(
-        event_list=[],
+        event_list=[marathon.event_descriptor(event_rule)] if event_rule else [],
         live_list=live_list,
         limited_bonus_list=[],
         limited_bonus_common_list=[],
         random_live_list=random_live_list,
         free_live_list=[],
         training_live_list=[],
+        event_presentation_protocol=event_presentation.protocol_version(),
     )
 
 
@@ -382,6 +408,14 @@ DEBUG_SERVER_SCORE_CALCULATE = False
 
 @idol.register("live", "partyList")
 async def live_partylist(context: idol.SchoolIdolUserParams, request: LivePartyListRequest) -> LivePartyListResponse:
+    if marathon.enabled():
+        with marathon.live_scope(context):
+            await marathon.prepare_party(context, request)
+            return await build_party_list(context, request)
+    return await build_party_list(context, request)
+
+
+async def build_party_list(context: idol.SchoolIdolUserParams, request: LivePartyListRequest) -> LivePartyListResponse:
     current_user = await user.get_current(context)
     training_energy, training_energy_max = await master_challenge.get_energy(context, current_user)
     if config.CONFIG_DATA.gameplay.master_challenge_daily_limit is not None:
@@ -507,7 +541,14 @@ async def live_precisescore(
 
 
 @idol.register("live", "play", xmc_verify=idol.XMCVerifyMode.CROSS)
-async def live_play(context: idol.SchoolIdolUserParams, request: LivePlayRequest) -> LivePlayResponse:
+async def live_play(context: idol.SchoolIdolUserParams, request: LivePlayRequest) -> LivePlayResponse | marathon.Wire:
+    if marathon.enabled():
+        with marathon.live_scope(context):
+            return await marathon.play(context, request, play_live)
+    return await play_live(context, request)
+
+
+async def play_live(context: idol.SchoolIdolUserParams, request: LivePlayRequest) -> LivePlayResponse:
     limit = config.CONFIG_DATA.gameplay.master_challenge_daily_limit
     if limit is None or not await master_challenge.validate_entry(
         context, request.live_difficulty_id, request.is_training
@@ -653,17 +694,28 @@ async def start_live(
 
 @idol.register("live", "gameover")
 async def live_gameover(context: idol.SchoolIdolUserParams) -> None:
+    await marathon.lock(context)
     if reward_egg.get_policy() is not None:
         await reward_egg.lock_player(context)
     current_user = await user.get_current(context)
     await live.clean_live_in_progress(context, current_user)
+    await marathon.discard_live(context, current_user.id)
 
 
 @idol.register("live", "reward")
 async def live_reward(
     context: idol.SchoolIdolUserParams, request: LiveRewardRequest
-) -> LiveRewardResponse | reward_egg.WireResponse:
+) -> LiveRewardResponse | marathon.Wire | reward_egg.WireResponse:
+    event_settlement = await marathon.lock_for_settlement(context)
+    historical_event_reward = await marathon.legacy_egg_event_reward(context)
+    if historical_event_reward is not None:
+        return historical_event_reward
     operation = functools.partial(settle_live_reward, context, request)
+    if event_settlement:
+        with marathon.live_scope(context):
+            return await reward_egg.settle(
+                context, "live", functools.partial(marathon.settle, context, request, settle_live_reward)
+            )
     return await reward_egg.settle(context, "live", operation)
 
 
@@ -721,7 +773,10 @@ async def settle_live_reward(context: idol.SchoolIdolUserParams, request: LiveRe
             cleared = True
 
             for i in range(1, 4):
-                live_clear_data_adjacent = await live.get_live_clear_data(context, current_user, enh_list[i])
+                adjacent = enh_list.get(i)
+                live_clear_data_adjacent = (
+                    await live.get_live_clear_data(context, current_user, adjacent) if adjacent is not None else None
+                )
                 if live_clear_data_adjacent is None or live_clear_data_adjacent.clear_cnt == 0:
                     cleared = False
                     break

@@ -202,6 +202,8 @@ scout_audit = false
 # Enable the friends-only mailbox with per-player send limits.
 friend_mail = false
 
+# Optional Marathon rules file relative to the server directory.
+# marathon_policy = "resources/events/marathon_rules.json"
 # Enable published event art and the acknowledged event home ZIP.
 event_client_resources = false
 

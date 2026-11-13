@@ -4,6 +4,7 @@ from .. import idol
 from ..system import common
 from ..system import item
 from ..system import live
+from ..system import marathon
 from ..system import reward
 from ..system import reward_egg
 from ..system import user
@@ -36,10 +37,12 @@ class CommonRecoveryEnergyResponse(common.TimestampMixin):
 @idol.register("common", "liveResume")
 async def common_liveresume(context: idol.SchoolIdolUserParams, request: CommonLiveResumeRequest) -> None:
     if request.cancel:
+        await marathon.lock(context)
         if reward_egg.get_policy() is not None:
             await reward_egg.lock_player(context)
         current_user = await user.get_current(context)
         await live.clean_live_in_progress(context, current_user)
+        await marathon.discard_live(context, current_user.id)
 
 
 @idol.register("common", "recoveryEnergy", batchable=False)

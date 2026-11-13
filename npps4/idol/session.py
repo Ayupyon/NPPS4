@@ -25,6 +25,7 @@ class BasicSchoolIdolContext:
         self.lang = lang
         self.db = database.Database()
         self.cache: dict[str, dict[Any, Any]] = {}
+        self._after_commit: list[Callable[[], None]] = []
 
     async def __aenter__(self):
         mainsession = self.db.main
@@ -37,6 +38,8 @@ class BasicSchoolIdolContext:
 
     async def __aexit__(self, exc_type, exc, tb):
         self.cache.clear()
+        callbacks = self._after_commit
+        self._after_commit = []
 
         try:
             if exc_type is None:
@@ -48,6 +51,13 @@ class BasicSchoolIdolContext:
             raise
         finally:
             await self.db.cleanup()
+
+        if exc_type is None:
+            for callback in callbacks:
+                callback()
+
+    def after_commit(self, callback: Callable[[], None]) -> None:
+        self._after_commit.append(callback)
 
     def is_lang_jp(self):
         return self.lang == idoltype.Language.jp

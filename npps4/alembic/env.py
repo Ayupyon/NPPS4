@@ -24,6 +24,7 @@ if config.config_file_name is not None:
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 import npps4.db.main as npps4_model
+import npps4.db.marathon
 import npps4.config.config as npps4_config
 import npps4.evloop
 

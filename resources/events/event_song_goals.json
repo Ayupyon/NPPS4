@@ -1,0 +1,1208 @@
+{
+  "schema_version": 1,
+  "source": "existing native getLiveGoalReward and installed event master; no invented rewards",
+  "songs": {
+    "34": {
+      "setting_id": 34,
+      "clear_counts": {
+        "c": 1,
+        "b": 2,
+        "a": 3,
+        "s": 5
+      },
+      "goals": [
+        {
+          "live_goal_reward_id": 397,
+          "live_goal_type": 1,
+          "rank": 4,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 500
+        },
+        {
+          "live_goal_reward_id": 398,
+          "live_goal_type": 1,
+          "rank": 3,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 900
+        },
+        {
+          "live_goal_reward_id": 399,
+          "live_goal_type": 1,
+          "rank": 2,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 1500
+        },
+        {
+          "live_goal_reward_id": 400,
+          "live_goal_type": 1,
+          "rank": 1,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 2500
+        },
+        {
+          "live_goal_reward_id": 401,
+          "live_goal_type": 2,
+          "rank": 4,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 250
+        },
+        {
+          "live_goal_reward_id": 402,
+          "live_goal_type": 2,
+          "rank": 3,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 500
+        },
+        {
+          "live_goal_reward_id": 403,
+          "live_goal_type": 2,
+          "rank": 2,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 750
+        },
+        {
+          "live_goal_reward_id": 404,
+          "live_goal_type": 2,
+          "rank": 1,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 1250
+        },
+        {
+          "live_goal_reward_id": 405,
+          "live_goal_type": 3,
+          "rank": 4,
+          "add_type": 3002,
+          "item_id": 2,
+          "item_category_id": 2,
+          "amount": 25
+        },
+        {
+          "live_goal_reward_id": 406,
+          "live_goal_type": 3,
+          "rank": 3,
+          "add_type": 3002,
+          "item_id": 2,
+          "item_category_id": 2,
+          "amount": 50
+        },
+        {
+          "live_goal_reward_id": 407,
+          "live_goal_type": 3,
+          "rank": 2,
+          "add_type": 3002,
+          "item_id": 2,
+          "item_category_id": 2,
+          "amount": 75
+        },
+        {
+          "live_goal_reward_id": 408,
+          "live_goal_type": 3,
+          "rank": 1,
+          "add_type": 3002,
+          "item_id": 2,
+          "item_category_id": 2,
+          "amount": 100
+        }
+      ]
+    },
+    "35": {
+      "setting_id": 35,
+      "clear_counts": {
+        "c": 1,
+        "b": 2,
+        "a": 3,
+        "s": 5
+      },
+      "goals": [
+        {
+          "live_goal_reward_id": 409,
+          "live_goal_type": 1,
+          "rank": 4,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 1500
+        },
+        {
+          "live_goal_reward_id": 410,
+          "live_goal_type": 1,
+          "rank": 3,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 2500
+        },
+        {
+          "live_goal_reward_id": 411,
+          "live_goal_type": 1,
+          "rank": 2,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 5000
+        },
+        {
+          "live_goal_reward_id": 412,
+          "live_goal_type": 1,
+          "rank": 1,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 7500
+        },
+        {
+          "live_goal_reward_id": 413,
+          "live_goal_type": 2,
+          "rank": 4,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 1000
+        },
+        {
+          "live_goal_reward_id": 414,
+          "live_goal_type": 2,
+          "rank": 3,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 1500
+        },
+        {
+          "live_goal_reward_id": 415,
+          "live_goal_type": 2,
+          "rank": 2,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 2000
+        },
+        {
+          "live_goal_reward_id": 416,
+          "live_goal_type": 2,
+          "rank": 1,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 3000
+        },
+        {
+          "live_goal_reward_id": 417,
+          "live_goal_type": 3,
+          "rank": 4,
+          "add_type": 3002,
+          "item_id": 2,
+          "item_category_id": 2,
+          "amount": 100
+        },
+        {
+          "live_goal_reward_id": 418,
+          "live_goal_type": 3,
+          "rank": 3,
+          "add_type": 3002,
+          "item_id": 2,
+          "item_category_id": 2,
+          "amount": 150
+        },
+        {
+          "live_goal_reward_id": 419,
+          "live_goal_type": 3,
+          "rank": 2,
+          "add_type": 3002,
+          "item_id": 2,
+          "item_category_id": 2,
+          "amount": 200
+        },
+        {
+          "live_goal_reward_id": 420,
+          "live_goal_type": 3,
+          "rank": 1,
+          "add_type": 3002,
+          "item_id": 2,
+          "item_category_id": 2,
+          "amount": 300
+        }
+      ]
+    },
+    "36": {
+      "setting_id": 36,
+      "clear_counts": {
+        "c": 1,
+        "b": 2,
+        "a": 3,
+        "s": 5
+      },
+      "goals": [
+        {
+          "live_goal_reward_id": 421,
+          "live_goal_type": 1,
+          "rank": 4,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 5000
+        },
+        {
+          "live_goal_reward_id": 422,
+          "live_goal_type": 1,
+          "rank": 3,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 8000
+        },
+        {
+          "live_goal_reward_id": 423,
+          "live_goal_type": 1,
+          "rank": 2,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 12000
+        },
+        {
+          "live_goal_reward_id": 424,
+          "live_goal_type": 1,
+          "rank": 1,
+          "add_type": 3002,
+          "item_id": 2,
+          "item_category_id": 2,
+          "amount": 1000
+        },
+        {
+          "live_goal_reward_id": 425,
+          "live_goal_type": 2,
+          "rank": 4,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 4000
+        },
+        {
+          "live_goal_reward_id": 426,
+          "live_goal_type": 2,
+          "rank": 3,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 7000
+        },
+        {
+          "live_goal_reward_id": 427,
+          "live_goal_type": 2,
+          "rank": 2,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 10000
+        },
+        {
+          "live_goal_reward_id": 428,
+          "live_goal_type": 2,
+          "rank": 1,
+          "add_type": 3002,
+          "item_id": 2,
+          "item_category_id": 2,
+          "amount": 1000
+        },
+        {
+          "live_goal_reward_id": 429,
+          "live_goal_type": 3,
+          "rank": 4,
+          "add_type": 3002,
+          "item_id": 2,
+          "item_category_id": 2,
+          "amount": 300
+        },
+        {
+          "live_goal_reward_id": 430,
+          "live_goal_type": 3,
+          "rank": 3,
+          "add_type": 3002,
+          "item_id": 2,
+          "item_category_id": 2,
+          "amount": 500
+        },
+        {
+          "live_goal_reward_id": 431,
+          "live_goal_type": 3,
+          "rank": 2,
+          "add_type": 3002,
+          "item_id": 2,
+          "item_category_id": 2,
+          "amount": 700
+        },
+        {
+          "live_goal_reward_id": 432,
+          "live_goal_type": 3,
+          "rank": 1,
+          "add_type": 3001,
+          "item_id": 4,
+          "item_category_id": 4,
+          "amount": 1
+        }
+      ]
+    },
+    "43": {
+      "setting_id": 43,
+      "clear_counts": {
+        "c": 1,
+        "b": 2,
+        "a": 3,
+        "s": 5
+      },
+      "goals": [
+        {
+          "live_goal_reward_id": 505,
+          "live_goal_type": 1,
+          "rank": 4,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 500
+        },
+        {
+          "live_goal_reward_id": 506,
+          "live_goal_type": 1,
+          "rank": 3,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 900
+        },
+        {
+          "live_goal_reward_id": 507,
+          "live_goal_type": 1,
+          "rank": 2,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 1500
+        },
+        {
+          "live_goal_reward_id": 508,
+          "live_goal_type": 1,
+          "rank": 1,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 2500
+        },
+        {
+          "live_goal_reward_id": 509,
+          "live_goal_type": 2,
+          "rank": 4,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 250
+        },
+        {
+          "live_goal_reward_id": 510,
+          "live_goal_type": 2,
+          "rank": 3,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 500
+        },
+        {
+          "live_goal_reward_id": 511,
+          "live_goal_type": 2,
+          "rank": 2,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 750
+        },
+        {
+          "live_goal_reward_id": 512,
+          "live_goal_type": 2,
+          "rank": 1,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 1250
+        },
+        {
+          "live_goal_reward_id": 513,
+          "live_goal_type": 3,
+          "rank": 4,
+          "add_type": 3002,
+          "item_id": 2,
+          "item_category_id": 2,
+          "amount": 25
+        },
+        {
+          "live_goal_reward_id": 514,
+          "live_goal_type": 3,
+          "rank": 3,
+          "add_type": 3002,
+          "item_id": 2,
+          "item_category_id": 2,
+          "amount": 50
+        },
+        {
+          "live_goal_reward_id": 515,
+          "live_goal_type": 3,
+          "rank": 2,
+          "add_type": 3002,
+          "item_id": 2,
+          "item_category_id": 2,
+          "amount": 75
+        },
+        {
+          "live_goal_reward_id": 516,
+          "live_goal_type": 3,
+          "rank": 1,
+          "add_type": 3002,
+          "item_id": 2,
+          "item_category_id": 2,
+          "amount": 100
+        }
+      ]
+    },
+    "44": {
+      "setting_id": 44,
+      "clear_counts": {
+        "c": 1,
+        "b": 2,
+        "a": 3,
+        "s": 5
+      },
+      "goals": [
+        {
+          "live_goal_reward_id": 517,
+          "live_goal_type": 1,
+          "rank": 4,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 1500
+        },
+        {
+          "live_goal_reward_id": 518,
+          "live_goal_type": 1,
+          "rank": 3,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 2500
+        },
+        {
+          "live_goal_reward_id": 519,
+          "live_goal_type": 1,
+          "rank": 2,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 5000
+        },
+        {
+          "live_goal_reward_id": 520,
+          "live_goal_type": 1,
+          "rank": 1,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 7500
+        },
+        {
+          "live_goal_reward_id": 521,
+          "live_goal_type": 2,
+          "rank": 4,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 1000
+        },
+        {
+          "live_goal_reward_id": 522,
+          "live_goal_type": 2,
+          "rank": 3,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 1500
+        },
+        {
+          "live_goal_reward_id": 523,
+          "live_goal_type": 2,
+          "rank": 2,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 2000
+        },
+        {
+          "live_goal_reward_id": 524,
+          "live_goal_type": 2,
+          "rank": 1,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 3000
+        },
+        {
+          "live_goal_reward_id": 525,
+          "live_goal_type": 3,
+          "rank": 4,
+          "add_type": 3002,
+          "item_id": 2,
+          "item_category_id": 2,
+          "amount": 100
+        },
+        {
+          "live_goal_reward_id": 526,
+          "live_goal_type": 3,
+          "rank": 3,
+          "add_type": 3002,
+          "item_id": 2,
+          "item_category_id": 2,
+          "amount": 150
+        },
+        {
+          "live_goal_reward_id": 527,
+          "live_goal_type": 3,
+          "rank": 2,
+          "add_type": 3002,
+          "item_id": 2,
+          "item_category_id": 2,
+          "amount": 200
+        },
+        {
+          "live_goal_reward_id": 528,
+          "live_goal_type": 3,
+          "rank": 1,
+          "add_type": 3002,
+          "item_id": 2,
+          "item_category_id": 2,
+          "amount": 300
+        }
+      ]
+    },
+    "45": {
+      "setting_id": 45,
+      "clear_counts": {
+        "c": 1,
+        "b": 2,
+        "a": 3,
+        "s": 5
+      },
+      "goals": [
+        {
+          "live_goal_reward_id": 529,
+          "live_goal_type": 1,
+          "rank": 4,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 5000
+        },
+        {
+          "live_goal_reward_id": 530,
+          "live_goal_type": 1,
+          "rank": 3,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 8000
+        },
+        {
+          "live_goal_reward_id": 531,
+          "live_goal_type": 1,
+          "rank": 2,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 12000
+        },
+        {
+          "live_goal_reward_id": 532,
+          "live_goal_type": 1,
+          "rank": 1,
+          "add_type": 3002,
+          "item_id": 2,
+          "item_category_id": 2,
+          "amount": 1000
+        },
+        {
+          "live_goal_reward_id": 533,
+          "live_goal_type": 2,
+          "rank": 4,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 4000
+        },
+        {
+          "live_goal_reward_id": 534,
+          "live_goal_type": 2,
+          "rank": 3,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 7000
+        },
+        {
+          "live_goal_reward_id": 535,
+          "live_goal_type": 2,
+          "rank": 2,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 10000
+        },
+        {
+          "live_goal_reward_id": 536,
+          "live_goal_type": 2,
+          "rank": 1,
+          "add_type": 3002,
+          "item_id": 2,
+          "item_category_id": 2,
+          "amount": 1000
+        },
+        {
+          "live_goal_reward_id": 537,
+          "live_goal_type": 3,
+          "rank": 4,
+          "add_type": 3002,
+          "item_id": 2,
+          "item_category_id": 2,
+          "amount": 300
+        },
+        {
+          "live_goal_reward_id": 538,
+          "live_goal_type": 3,
+          "rank": 3,
+          "add_type": 3002,
+          "item_id": 2,
+          "item_category_id": 2,
+          "amount": 500
+        },
+        {
+          "live_goal_reward_id": 539,
+          "live_goal_type": 3,
+          "rank": 2,
+          "add_type": 3002,
+          "item_id": 2,
+          "item_category_id": 2,
+          "amount": 700
+        },
+        {
+          "live_goal_reward_id": 540,
+          "live_goal_type": 3,
+          "rank": 1,
+          "add_type": 3001,
+          "item_id": 4,
+          "item_category_id": 4,
+          "amount": 1
+        }
+      ]
+    },
+    "90116": {
+      "setting_id": 116,
+      "clear_counts": {
+        "c": 1,
+        "b": 2,
+        "a": 3,
+        "s": 5
+      },
+      "goals": [
+        {
+          "live_goal_reward_id": 901160011,
+          "live_goal_type": 1,
+          "rank": 1,
+          "add_type": 3002,
+          "item_id": 2,
+          "item_category_id": 2,
+          "amount": 1000
+        },
+        {
+          "live_goal_reward_id": 901160012,
+          "live_goal_type": 1,
+          "rank": 2,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 12000
+        },
+        {
+          "live_goal_reward_id": 901160013,
+          "live_goal_type": 1,
+          "rank": 3,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 8000
+        },
+        {
+          "live_goal_reward_id": 901160014,
+          "live_goal_type": 1,
+          "rank": 4,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 5000
+        },
+        {
+          "live_goal_reward_id": 901160021,
+          "live_goal_type": 2,
+          "rank": 1,
+          "add_type": 3001,
+          "item_id": 4,
+          "item_category_id": 4,
+          "amount": 1
+        },
+        {
+          "live_goal_reward_id": 901160022,
+          "live_goal_type": 2,
+          "rank": 2,
+          "add_type": 3002,
+          "item_id": 2,
+          "item_category_id": 2,
+          "amount": 500
+        },
+        {
+          "live_goal_reward_id": 901160023,
+          "live_goal_type": 2,
+          "rank": 3,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 10000
+        },
+        {
+          "live_goal_reward_id": 901160024,
+          "live_goal_type": 2,
+          "rank": 4,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 7000
+        },
+        {
+          "live_goal_reward_id": 901160031,
+          "live_goal_type": 3,
+          "rank": 1,
+          "add_type": 3001,
+          "item_id": 4,
+          "item_category_id": 4,
+          "amount": 1
+        },
+        {
+          "live_goal_reward_id": 901160032,
+          "live_goal_type": 3,
+          "rank": 2,
+          "add_type": 3002,
+          "item_id": 2,
+          "item_category_id": 2,
+          "amount": 1000
+        },
+        {
+          "live_goal_reward_id": 901160033,
+          "live_goal_type": 3,
+          "rank": 3,
+          "add_type": 3002,
+          "item_id": 2,
+          "item_category_id": 2,
+          "amount": 500
+        },
+        {
+          "live_goal_reward_id": 901160034,
+          "live_goal_type": 3,
+          "rank": 4,
+          "add_type": 3002,
+          "item_id": 2,
+          "item_category_id": 2,
+          "amount": 300
+        }
+      ]
+    },
+    "90132": {
+      "setting_id": 132,
+      "clear_counts": {
+        "c": 1,
+        "b": 2,
+        "a": 3,
+        "s": 5
+      },
+      "goals": [
+        {
+          "live_goal_reward_id": 901320011,
+          "live_goal_type": 1,
+          "rank": 1,
+          "add_type": 3002,
+          "item_id": 2,
+          "item_category_id": 2,
+          "amount": 1000
+        },
+        {
+          "live_goal_reward_id": 901320012,
+          "live_goal_type": 1,
+          "rank": 2,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 12000
+        },
+        {
+          "live_goal_reward_id": 901320013,
+          "live_goal_type": 1,
+          "rank": 3,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 8000
+        },
+        {
+          "live_goal_reward_id": 901320014,
+          "live_goal_type": 1,
+          "rank": 4,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 5000
+        },
+        {
+          "live_goal_reward_id": 901320021,
+          "live_goal_type": 2,
+          "rank": 1,
+          "add_type": 3001,
+          "item_id": 4,
+          "item_category_id": 4,
+          "amount": 1
+        },
+        {
+          "live_goal_reward_id": 901320022,
+          "live_goal_type": 2,
+          "rank": 2,
+          "add_type": 3002,
+          "item_id": 2,
+          "item_category_id": 2,
+          "amount": 500
+        },
+        {
+          "live_goal_reward_id": 901320023,
+          "live_goal_type": 2,
+          "rank": 3,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 10000
+        },
+        {
+          "live_goal_reward_id": 901320024,
+          "live_goal_type": 2,
+          "rank": 4,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 7000
+        },
+        {
+          "live_goal_reward_id": 901320031,
+          "live_goal_type": 3,
+          "rank": 1,
+          "add_type": 3001,
+          "item_id": 4,
+          "item_category_id": 4,
+          "amount": 1
+        },
+        {
+          "live_goal_reward_id": 901320032,
+          "live_goal_type": 3,
+          "rank": 2,
+          "add_type": 3002,
+          "item_id": 2,
+          "item_category_id": 2,
+          "amount": 1000
+        },
+        {
+          "live_goal_reward_id": 901320033,
+          "live_goal_type": 3,
+          "rank": 3,
+          "add_type": 3002,
+          "item_id": 2,
+          "item_category_id": 2,
+          "amount": 500
+        },
+        {
+          "live_goal_reward_id": 901320034,
+          "live_goal_type": 3,
+          "rank": 4,
+          "add_type": 3002,
+          "item_id": 2,
+          "item_category_id": 2,
+          "amount": 300
+        }
+      ]
+    },
+    "90660": {
+      "setting_id": 660,
+      "clear_counts": {
+        "c": 1,
+        "b": 2,
+        "a": 3,
+        "s": 5
+      },
+      "goals": [
+        {
+          "live_goal_reward_id": 906600011,
+          "live_goal_type": 1,
+          "rank": 1,
+          "add_type": 3001,
+          "item_id": 4,
+          "item_category_id": 4,
+          "amount": 1
+        },
+        {
+          "live_goal_reward_id": 906600012,
+          "live_goal_type": 1,
+          "rank": 2,
+          "add_type": 3001,
+          "item_id": 4,
+          "item_category_id": 4,
+          "amount": 1
+        },
+        {
+          "live_goal_reward_id": 906600013,
+          "live_goal_type": 1,
+          "rank": 3,
+          "add_type": 3002,
+          "item_id": 2,
+          "item_category_id": 2,
+          "amount": 500
+        },
+        {
+          "live_goal_reward_id": 906600014,
+          "live_goal_type": 1,
+          "rank": 4,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 10000
+        },
+        {
+          "live_goal_reward_id": 906600021,
+          "live_goal_type": 2,
+          "rank": 1,
+          "add_type": 3001,
+          "item_id": 4,
+          "item_category_id": 4,
+          "amount": 1
+        },
+        {
+          "live_goal_reward_id": 906600022,
+          "live_goal_type": 2,
+          "rank": 2,
+          "add_type": 3001,
+          "item_id": 4,
+          "item_category_id": 4,
+          "amount": 1
+        },
+        {
+          "live_goal_reward_id": 906600023,
+          "live_goal_type": 2,
+          "rank": 3,
+          "add_type": 3002,
+          "item_id": 2,
+          "item_category_id": 2,
+          "amount": 500
+        },
+        {
+          "live_goal_reward_id": 906600024,
+          "live_goal_type": 2,
+          "rank": 4,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 10000
+        },
+        {
+          "live_goal_reward_id": 906600031,
+          "live_goal_type": 3,
+          "rank": 1,
+          "add_type": 3001,
+          "item_id": 4,
+          "item_category_id": 4,
+          "amount": 1
+        },
+        {
+          "live_goal_reward_id": 906600032,
+          "live_goal_type": 3,
+          "rank": 2,
+          "add_type": 3001,
+          "item_id": 4,
+          "item_category_id": 4,
+          "amount": 1
+        },
+        {
+          "live_goal_reward_id": 906600033,
+          "live_goal_type": 3,
+          "rank": 3,
+          "add_type": 3002,
+          "item_id": 2,
+          "item_category_id": 2,
+          "amount": 1000
+        },
+        {
+          "live_goal_reward_id": 906600034,
+          "live_goal_type": 3,
+          "rank": 4,
+          "add_type": 3002,
+          "item_id": 2,
+          "item_category_id": 2,
+          "amount": 500
+        }
+      ]
+    },
+    "90670": {
+      "setting_id": 670,
+      "clear_counts": {
+        "c": 1,
+        "b": 2,
+        "a": 3,
+        "s": 5
+      },
+      "goals": [
+        {
+          "live_goal_reward_id": 906700011,
+          "live_goal_type": 1,
+          "rank": 1,
+          "add_type": 3001,
+          "item_id": 4,
+          "item_category_id": 4,
+          "amount": 1
+        },
+        {
+          "live_goal_reward_id": 906700012,
+          "live_goal_type": 1,
+          "rank": 2,
+          "add_type": 3001,
+          "item_id": 4,
+          "item_category_id": 4,
+          "amount": 1
+        },
+        {
+          "live_goal_reward_id": 906700013,
+          "live_goal_type": 1,
+          "rank": 3,
+          "add_type": 3002,
+          "item_id": 2,
+          "item_category_id": 2,
+          "amount": 500
+        },
+        {
+          "live_goal_reward_id": 906700014,
+          "live_goal_type": 1,
+          "rank": 4,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 10000
+        },
+        {
+          "live_goal_reward_id": 906700021,
+          "live_goal_type": 2,
+          "rank": 1,
+          "add_type": 3001,
+          "item_id": 4,
+          "item_category_id": 4,
+          "amount": 1
+        },
+        {
+          "live_goal_reward_id": 906700022,
+          "live_goal_type": 2,
+          "rank": 2,
+          "add_type": 3001,
+          "item_id": 4,
+          "item_category_id": 4,
+          "amount": 1
+        },
+        {
+          "live_goal_reward_id": 906700023,
+          "live_goal_type": 2,
+          "rank": 3,
+          "add_type": 3002,
+          "item_id": 2,
+          "item_category_id": 2,
+          "amount": 500
+        },
+        {
+          "live_goal_reward_id": 906700024,
+          "live_goal_type": 2,
+          "rank": 4,
+          "add_type": 3000,
+          "item_id": 3,
+          "item_category_id": 3,
+          "amount": 10000
+        },
+        {
+          "live_goal_reward_id": 906700031,
+          "live_goal_type": 3,
+          "rank": 1,
+          "add_type": 3001,
+          "item_id": 4,
+          "item_category_id": 4,
+          "amount": 1
+        },
+        {
+          "live_goal_reward_id": 906700032,
+          "live_goal_type": 3,
+          "rank": 2,
+          "add_type": 3001,
+          "item_id": 4,
+          "item_category_id": 4,
+          "amount": 1
+        },
+        {
+          "live_goal_reward_id": 906700033,
+          "live_goal_type": 3,
+          "rank": 3,
+          "add_type": 3002,
+          "item_id": 2,
+          "item_category_id": 2,
+          "amount": 1000
+        },
+        {
+          "live_goal_reward_id": 906700034,
+          "live_goal_type": 3,
+          "rank": 4,
+          "add_type": 3002,
+          "item_id": 2,
+          "item_category_id": 2,
+          "amount": 500
+        }
+      ]
+    }
+  },
+  "completion_policy": {
+    "revision": "all-marathon-clear-1-2-3-5-v1",
+    "origin": "user-defined-private-server-rule",
+    "date": "2026-11-09",
+    "counts": {
+      "c": 1,
+      "b": 2,
+      "a": 3,
+      "s": 5
+    },
+    "scope": "all traditional event songs, existing and future; ordinary songs unchanged"
+  }
+}

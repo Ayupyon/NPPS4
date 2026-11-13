@@ -1,14 +1,17 @@
 import enum
 
+import pydantic
+
 from .. import idol
 from .. import idoltype
 from .. import svinfo
 from .. import util
 from ..config import config
 from ..download import download
+from ..download import event_presentation
 from ..idol import error
-
-import pydantic
+from ..system import event_home
+from ..system import marathon
 
 _TARGET_OS_REMAP = {"Android": idoltype.PlatformType.Android, "iOS": idoltype.PlatformType.iOS}
 
@@ -113,8 +116,15 @@ async def download_batch(context: idol.SchoolIdolAuthParams, request: DownloadBa
 
 @idol.register("download", "event", check_version=False, batchable=False)
 async def download_event(context: idol.SchoolIdolAuthParams, request: DownloadBatchRequest) -> DownloadCommonResponse:
-    # TODO
-    return DownloadCommonResponse.model_validate([])
+    if request.package_type != DownloadPackageType.EVENT_SCENARIO or event_presentation.protocol_version() is None:
+        return DownloadCommonResponse([])
+    period = marathon.current_period()
+    package = event_home.offer_package(context, period["key"] if period else None, request.excluded_package_ids)
+    if package is None:
+        return DownloadCommonResponse([])
+    platform = _TARGET_OS_REMAP[request.os.value]
+    url = event_presentation.asset_url(context.request, platform, package.zip_path)
+    return DownloadCommonResponse([DownloadInfo(url=url, size=str(package.zip_size))])
 
 
 @idol.register("download", "additional", check_version=False, batchable=False)

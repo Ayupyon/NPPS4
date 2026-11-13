@@ -18,6 +18,7 @@ from .. import idol
 from .. import util
 from ..db import main
 from ..db import game_mater
+from ..db import marathon
 from ..idol import session
 
 from typing import Protocol
@@ -300,6 +301,9 @@ async def delete_user(context: idol.BasicSchoolIdolContext, user_id: int):
             sqlalchemy.or_(main.DestinyMail.sender_id == user_id, main.DestinyMail.receiver_id == user_id)
         )
     )
+    for table in marathon.tables:
+        if "user_id" in table.c and table is not marathon.ranking_snapshot:
+            await context.db.main.execute(table.delete().where(table.c.user_id == user_id))
     await _clean_table(context, main.DestinyRewardEggLive, user_id)
     await _clean_table(context, main.DestinyRewardEggReceipt, user_id)
     await _clean_table(context, main.DestinyRewardEgg, user_id)

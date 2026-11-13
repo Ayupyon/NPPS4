@@ -1,8 +1,15 @@
+import hashlib
+
 import pydantic
 
 from .. import idol
 from .. import util
+from ..download import event_presentation
+from ..system import event_home
+from ..system import marathon
 from ..system import user
+
+DEFAULT_EXPIRY = 2147483647
 
 
 class BannerInfo(pydantic.BaseModel):
@@ -29,8 +36,8 @@ async def banner_bannerlist(context: idol.SchoolIdolUserParams) -> BannerListRes
     # TODO
     util.stub("banner", "bannerList", context.raw_request_data)
 
-    return BannerListResponse(
-        time_limit=util.timestamp_to_datetime(2147483647),
+    response = BannerListResponse(
+        time_limit=util.timestamp_to_datetime(DEFAULT_EXPIRY),
         banner_list=[
             # SIF2 transfer banner
             BannerInfo(
@@ -66,3 +73,34 @@ async def banner_bannerlist(context: idol.SchoolIdolUserParams) -> BannerListRes
             ),
         ],
     )
+    if event_presentation.protocol_version() is None:
+        return response
+
+    now = marathon.now()
+    expiry = min(DEFAULT_EXPIRY, now + 60)
+    period = marathon.current_period()
+    package = event_home.ready_package(context, period["key"]) if period else None
+    if period is not None and package is not None:
+        dates = [marathon.timestamp(period[phase]) for phase in ("open", "start", "end", "close")]
+        opens, starts, ends, closes = dates
+        event_id = period["event_id"]
+        if not opens < starts < ends < closes or not 0 < event_id < DEFAULT_EXPIRY:
+            raise ValueError("Invalid event home banner period")
+        expiry = min(expiry, min((date for date in dates if date > now), default=expiry))
+        if opens <= now < closes:
+            banner_id = 1500000000 + int(hashlib.sha256(package.period_key.encode()).hexdigest()[:8], 16) % 500000000
+            response.banner_list.insert(
+                0,
+                BannerInfo(
+                    banner_type=0,
+                    target_id=event_id,
+                    asset_path=package.asset_path,
+                    fixed_flag=False,
+                    back_side=False,
+                    banner_id=banner_id,
+                    start_date=util.timestamp_to_datetime(opens),
+                    end_date=util.timestamp_to_datetime(closes),
+                ),
+            )
+    response.time_limit = util.timestamp_to_datetime(expiry)
+    return response

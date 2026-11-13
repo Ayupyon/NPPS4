@@ -1,3 +1,5 @@
+import functools
+
 import pydantic
 
 from .. import idol
@@ -9,9 +11,11 @@ from ..system import advanced
 from ..system import class_system as class_system_module
 from ..system import common
 from ..system import effort
+from ..system import event_home
 from ..system import item
 from ..system import item_model
 from ..system import lbonus
+from ..system import marathon
 from ..system import museum
 from ..system import reward
 from ..system import reward_egg
@@ -56,7 +60,16 @@ class LoginBonusResponse(achievement.AchievementMixin, common.TimestampMixin):
 
 @idol.register("lbonus", "execute", batchable=False, xmc_verify=idol.XMCVerifyMode.CROSS, exclude_none=True)
 async def lbonus_execute(context: idol.SchoolIdolUserParams) -> LoginBonusResponse | reward_egg.WireResponse:
-    return await reward_egg.settle(context, "lbonus", lambda: execute_login_bonus(context))
+    async def execute_and_acknowledge() -> LoginBonusResponse:
+        offer = event_home.pending_offer(context)
+        response = await execute_login_bonus(context)
+        if offer is not None:
+            period = marathon.current_period()
+            period_key = period["key"] if period else None
+            context.after_commit(functools.partial(event_home.acknowledge_offer, context, period_key, offer))
+        return response
+
+    return await reward_egg.settle(context, "lbonus", execute_and_acknowledge)
 
 
 async def execute_login_bonus(context: idol.SchoolIdolUserParams) -> LoginBonusResponse:
