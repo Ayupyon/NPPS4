@@ -4,6 +4,7 @@ from logging.config import fileConfig
 
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection
+from sqlalchemy.engine import make_url
 from sqlalchemy.ext.asyncio import create_async_engine
 
 from alembic import context
@@ -74,9 +75,9 @@ async def run_async_migrations() -> None:
 
     # https://github.com/sqlalchemy/alembic/issues/1655
     SQLiteImpl.transactional_ddl = True
-    connectable = create_async_engine(
-        npps4_config.get_database_url(), poolclass=pool.NullPool, echo=True, connect_args={"autocommit": False}
-    )
+    url = make_url(npps4_config.get_database_url())
+    connect_args = {"autocommit": False} if url.get_backend_name() == "sqlite" else {}
+    connectable = create_async_engine(url, poolclass=pool.NullPool, echo=True, connect_args=connect_args)
 
     if connectable.dialect.name == "sqlite":
         # Unfortunately we have to set WAL journaling mode manually.
