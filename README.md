@@ -30,36 +30,6 @@ Install Manually
 
 Note: If you're using Termux, make sure to have Rust toolchain and remove `-r requirements-perf.txt`.
 
-Install with Docker
------
-
-If you want to build the container from source, run:
-```sh
-docker build -t npps4 .
-```
-
-Or, if you want to use pre-compiled container as part of NPPS4 CI, run:
-```sh
-docker pull ghcr.io/darkenergyprocessor/npps4:latest
-```
-
-Then run the container for the first time so it setup the necessary data in `path/to/data`:
-
-```sh
-docker run --name npps4 -v path/to/data:/NPPS4/data -p 0.0.0.0:51376:51376 -it npps4
-```
-
-Configure `config.sample.toml` then **save it as `config.toml`** (or save the modified `config.sample.toml` first then
-rename it). Now re-run the container:
-```sh
-docker start npps4
-```
-
-Observe that the app is started successfully using:
-```sh
-docker logs npps4
-```
-
 Starting Up
 -----
 

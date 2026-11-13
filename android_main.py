@@ -22,7 +22,7 @@ had_run_once = False
 def _get_alembic_config():
     import alembic.config
 
-    target_dir = npps4.config.config.BUNDLE_DIR or npps4.config.config.ROOT_DIR
+    target_dir = npps4.config.config.ROOT_DIR
     alembic_config = alembic.config.Config(os.path.join(target_dir, "alembic.ini"))
     script_location = alembic_config.get_alembic_option("script_location", "npps4/alembic")
     alembic_config.set_section_option("alembic", "script_location", os.path.join(target_dir, script_location))

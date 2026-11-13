@@ -10,10 +10,9 @@ from .config import config
 def _get_alembic_config():
     import alembic.config
 
-    target_dir = config.BUNDLE_DIR or config.ROOT_DIR
-    alembic_config = alembic.config.Config(os.path.join(target_dir, "alembic.ini"))
+    alembic_config = alembic.config.Config(os.path.join(config.ROOT_DIR, "alembic.ini"))
     script_location = alembic_config.get_alembic_option("script_location", "npps4/alembic")
-    alembic_config.set_section_option("alembic", "script_location", os.path.join(target_dir, script_location))
+    alembic_config.set_section_option("alembic", "script_location", os.path.join(config.ROOT_DIR, script_location))
     return alembic_config
 
 
@@ -32,9 +31,6 @@ def run_command(host: str, port: int):
 
 def script_command(script: str, args: list[str]):
     valid_scripts = {os.path.splitext(os.path.basename(v))[0]: v for v in glob.glob(config.ROOT_DIR + "/scripts/*.py")}
-    # This is not a valid NPPS4 script per se
-    if "bootstrap_docker" in valid_scripts:
-        del valid_scripts["bootstrap_docker"]
 
     if script == "list":
         print("List of available scripts:")

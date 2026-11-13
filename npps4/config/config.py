@@ -13,18 +13,7 @@ from typing import TYPE_CHECKING, cast
 if TYPE_CHECKING:
     from .. import idol
 
-BUNDLE_DIR: str | None
-"""If running under pyinstaller, this will be pointing to sys._MEIPASS"""
-
-if getattr(sys, "frozen", False):
-    import multiprocessing
-
-    multiprocessing.freeze_support()
-    ROOT_DIR = os.path.normpath(os.path.dirname(sys.executable))
-    BUNDLE_DIR = cast(str, sys._MEIPASS)  # type: ignore
-else:
-    ROOT_DIR = os.path.normpath(os.path.dirname(__file__) + "/../..")
-    BUNDLE_DIR = None
+ROOT_DIR = os.path.normpath(os.path.dirname(__file__) + "/../..")
 
 os.makedirs(os.path.join(ROOT_DIR, "data"), exist_ok=True)
 
