@@ -604,14 +604,18 @@ RANK_REWARD_GROUPS: tuple[tuple[RankKind, str], ...] = (
 )
 
 
-async def finalize_due(context: idol.BasicSchoolIdolContext):
-    for rule in get_policy()["periods"]:
+async def finalize_due(context: idol.BasicSchoolIdolContext, period_key: str | None = None):
+    rules = [rule for rule in get_policy()["periods"] if period_key is None or rule["key"] == period_key]
+    if period_key is not None and not rules:
+        raise ValueError("Unknown settlement period")
+    for rule in rules:
         await register_period(context, rule)
-    periods = (
-        (await sql(context, "SELECT * FROM sif005_period WHERE frozen_at IS NULL AND freeze_at<=:t", t=now()))
-        .mappings()
-        .all()
+    query = sqlalchemy.select(schema.period).where(
+        schema.period.c.frozen_at.is_(None), schema.period.c.freeze_at <= now()
     )
+    if period_key is not None:
+        query = query.where(schema.period.c.period_key == period_key)
+    periods = (await context.db.main.execute(query)).mappings().all()
     for record in periods:
         rule = json.loads(record["rule_json"])
         for kind, group in RANK_REWARD_GROUPS:

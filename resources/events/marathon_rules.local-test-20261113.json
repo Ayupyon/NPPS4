@@ -1,0 +1,1199 @@
+{
+  "schema_version": 1,
+  "rule_origin": "May 3-16 2013 FIRST Sweet Holiday reward tables, transcribed from two community archives; not an official server dump. Current dates, five-card cheer, charts and scoring remain private-server test rules.",
+  "historical_sources": [
+    "https://w.atwiki.jp/lovelive-sif/pages/46.html",
+    "https://xn--eck5eb7eb.gamerch.com/Sweet%20Holiday"
+  ],
+  "periods": [
+    {
+      "key": "sif005-sweet-holiday-history-20261106-r2",
+      "version": "history-rewards-r2",
+      "event_id": 1,
+      "name": "Sweet Holiday",
+      "open": "2026-11-05T00:00:00Z",
+      "start": "2026-11-05T00:00:01Z",
+      "end": "2026-12-05T00:00:00Z",
+      "close": "2026-12-07T00:00:00Z",
+      "settlement_grace_seconds": 900,
+      "banner_asset": "assets/image/live/live_icon/l_jacket_001.png",
+      "point_icon_asset": "assets/flash/ui/live/img/e_icon_01.png",
+      "description": "Sweet Holiday 首期历史报酬复刻测试；五人应援、倍率与日期沿用实验规则。",
+      "point_name": "Token",
+      "allowed_factors": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "normal_token_count": {
+        "1": 5,
+        "2": 10,
+        "3": 15,
+        "4": 20,
+        "5": 20
+      },
+      "normal_point_per_token": 1,
+      "cheer_sources": [
+        "normal",
+        "event"
+      ],
+      "cheer_units": [
+        {
+          "unit_id": 79,
+          "amount": 20,
+          "rank_max_amount": 40
+        },
+        {
+          "unit_id": 75,
+          "amount": 10,
+          "rank_max_amount": 20
+        },
+        {
+          "unit_id": 1,
+          "amount": 5,
+          "rank_max_amount": 10
+        },
+        {
+          "unit_id": 2,
+          "amount": 5,
+          "rank_max_amount": 10
+        }
+      ],
+      "songs": [
+        {
+          "id": 34,
+          "setting_id": 34,
+          "cost": 15,
+          "base_point": 60
+        },
+        {
+          "id": 35,
+          "setting_id": 35,
+          "cost": 30,
+          "base_point": 125
+        },
+        {
+          "id": 36,
+          "setting_id": 36,
+          "cost": 45,
+          "base_point": 200
+        }
+      ],
+      "score_percent_by_rank": [
+        120,
+        115,
+        110,
+        105,
+        100
+      ],
+      "combo_percent_by_rank": [
+        110,
+        108,
+        105,
+        102,
+        100
+      ],
+      "minimum_reward_points": 1,
+      "minimum_reward_clears": 1,
+      "point_rewards": [
+        {
+          "id": "pt-10",
+          "points": 10,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "GAME_COIN",
+              "id": 3,
+              "amount": 5000
+            }
+          ]
+        },
+        {
+          "id": "pt-50",
+          "points": 50,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "SOCIAL_POINT",
+              "id": 2,
+              "amount": 100
+            }
+          ]
+        },
+        {
+          "id": "pt-100",
+          "points": 100,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "LOVECA",
+              "id": 0,
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "id": "pt-1000",
+          "points": 1000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "GAME_COIN",
+              "id": 3,
+              "amount": 5000
+            }
+          ]
+        },
+        {
+          "id": "pt-2000",
+          "points": 2000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "SOCIAL_POINT",
+              "id": 2,
+              "amount": 300
+            }
+          ]
+        },
+        {
+          "id": "pt-3000",
+          "points": 3000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "UNIT",
+              "id": 75,
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "id": "pt-4000",
+          "points": 4000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "GAME_COIN",
+              "id": 3,
+              "amount": 5000
+            }
+          ]
+        },
+        {
+          "id": "pt-5000",
+          "points": 5000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "SOCIAL_POINT",
+              "id": 2,
+              "amount": 300
+            }
+          ]
+        },
+        {
+          "id": "pt-6000",
+          "points": 6000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "GAME_COIN",
+              "id": 3,
+              "amount": 10000
+            }
+          ]
+        },
+        {
+          "id": "pt-7000",
+          "points": 7000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "SOCIAL_POINT",
+              "id": 2,
+              "amount": 500
+            }
+          ]
+        },
+        {
+          "id": "pt-8000",
+          "points": 8000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "LOVECA",
+              "id": 0,
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "id": "pt-9000",
+          "points": 9000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "GAME_COIN",
+              "id": 3,
+              "amount": 10000
+            }
+          ]
+        },
+        {
+          "id": "pt-10000",
+          "points": 10000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "SOCIAL_POINT",
+              "id": 2,
+              "amount": 500
+            }
+          ]
+        },
+        {
+          "id": "pt-11000",
+          "points": 11000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "GAME_COIN",
+              "id": 3,
+              "amount": 15000
+            }
+          ]
+        },
+        {
+          "id": "pt-12000",
+          "points": 12000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "SOCIAL_POINT",
+              "id": 2,
+              "amount": 500
+            }
+          ]
+        },
+        {
+          "id": "pt-13000",
+          "points": 13000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "GAME_COIN",
+              "id": 3,
+              "amount": 15000
+            }
+          ]
+        },
+        {
+          "id": "pt-14000",
+          "points": 14000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "LOVECA",
+              "id": 0,
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "id": "pt-15000",
+          "points": 15000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "UNIT",
+              "id": 79,
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "id": "pt-17000",
+          "points": 17000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "SOCIAL_POINT",
+              "id": 2,
+              "amount": 1000
+            }
+          ]
+        },
+        {
+          "id": "pt-20000",
+          "points": 20000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "LOVECA",
+              "id": 0,
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "id": "pt-25000",
+          "points": 25000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "LOVECA",
+              "id": 0,
+              "amount": 2
+            }
+          ]
+        },
+        {
+          "id": "pt-30000",
+          "points": 30000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "LOVECA",
+              "id": 0,
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "id": "pt-35000",
+          "points": 35000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "LOVECA",
+              "id": 0,
+              "amount": 3
+            }
+          ]
+        }
+      ],
+      "point_rank_rewards": [
+        {
+          "id": "point-1-3000",
+          "from": 1,
+          "to": 3000,
+          "items": [
+            {
+              "type": "UNIT",
+              "id": 79,
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "id": "point-3001-10000",
+          "from": 3001,
+          "to": 10000,
+          "items": [
+            {
+              "type": "ITEM",
+              "id": 1,
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "id": "point-10001-50000",
+          "from": 10001,
+          "to": 50000,
+          "items": [
+            {
+              "type": "LOVECA",
+              "id": 0,
+              "amount": 3
+            }
+          ]
+        },
+        {
+          "id": "point-50001-100000",
+          "from": 50001,
+          "to": 100000,
+          "items": [
+            {
+              "type": "LOVECA",
+              "id": 0,
+              "amount": 1
+            }
+          ]
+        }
+      ],
+      "score_rank_rewards": [
+        {
+          "id": "score-1-3000",
+          "from": 1,
+          "to": 3000,
+          "items": [
+            {
+              "type": "UNIT",
+              "id": 75,
+              "amount": 1
+            },
+            {
+              "type": "ITEM",
+              "id": 1,
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "id": "score-3001-10000",
+          "from": 3001,
+          "to": 10000,
+          "items": [
+            {
+              "type": "UNIT",
+              "id": 75,
+              "amount": 1
+            },
+            {
+              "type": "LOVECA",
+              "id": 0,
+              "amount": 3
+            }
+          ]
+        },
+        {
+          "id": "score-10001-50000",
+          "from": 10001,
+          "to": 50000,
+          "items": [
+            {
+              "type": "UNIT",
+              "id": 75,
+              "amount": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "sif005-love-heart-history-20261109-r1",
+      "version": "history-rewards-r1",
+      "event_id": 2,
+      "name": "怀抱明月 Love*Heart",
+      "open": "2026-11-09T00:00:00Z",
+      "start": "2026-11-09T00:00:01Z",
+      "end": "2026-11-13T07:20:29Z",
+      "close": "2026-12-11T00:00:00Z",
+      "settlement_grace_seconds": 0,
+      "banner_asset": "assets/image/live/live_icon/l_jacket_001.png",
+      "point_icon_asset": "assets/flash/ui/live/img/e_icon_01.png",
+      "description": "第二期首办历史报酬测试；后期谱面、EXPERT／MASTER、五人应援和计分为私服扩展。",
+      "point_name": "兔子徽章",
+      "allowed_factors": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "normal_token_count": {
+        "1": 5,
+        "2": 10,
+        "3": 15,
+        "4": 20,
+        "5": 20
+      },
+      "normal_point_per_token": 1,
+      "cheer_sources": [
+        "normal",
+        "event"
+      ],
+      "cheer_units": [
+        {
+          "unit_id": 84,
+          "amount": 20,
+          "rank_max_amount": 40
+        },
+        {
+          "unit_id": 82,
+          "amount": 10,
+          "rank_max_amount": 20
+        },
+        {
+          "unit_id": 1,
+          "amount": 5,
+          "rank_max_amount": 10
+        },
+        {
+          "unit_id": 2,
+          "amount": 5,
+          "rank_max_amount": 10
+        }
+      ],
+      "songs": [
+        {
+          "id": 43,
+          "setting_id": 43,
+          "cost": 15,
+          "base_point": 60
+        },
+        {
+          "id": 44,
+          "setting_id": 44,
+          "cost": 30,
+          "base_point": 125
+        },
+        {
+          "id": 45,
+          "setting_id": 45,
+          "cost": 45,
+          "base_point": 200
+        }
+      ],
+      "score_percent_by_rank": [
+        120,
+        115,
+        110,
+        105,
+        100
+      ],
+      "combo_percent_by_rank": [
+        110,
+        108,
+        105,
+        102,
+        100
+      ],
+      "minimum_reward_points": 1,
+      "minimum_reward_clears": 1,
+      "point_rewards": [
+        {
+          "id": "pt-10",
+          "points": 10,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "GAME_COIN",
+              "id": 3,
+              "amount": 5000
+            }
+          ]
+        },
+        {
+          "id": "pt-50",
+          "points": 50,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "SOCIAL_POINT",
+              "id": 2,
+              "amount": 100
+            }
+          ]
+        },
+        {
+          "id": "pt-100",
+          "points": 100,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "LOVECA",
+              "id": 0,
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "id": "pt-500",
+          "points": 500,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "GAME_COIN",
+              "id": 3,
+              "amount": 10000
+            }
+          ]
+        },
+        {
+          "id": "pt-1000",
+          "points": 1000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "LOVECA",
+              "id": 0,
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "id": "pt-1500",
+          "points": 1500,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "GAME_COIN",
+              "id": 3,
+              "amount": 10000
+            }
+          ]
+        },
+        {
+          "id": "pt-2000",
+          "points": 2000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "SOCIAL_POINT",
+              "id": 2,
+              "amount": 100
+            }
+          ]
+        },
+        {
+          "id": "pt-3000",
+          "points": 3000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "UNIT",
+              "id": 82,
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "id": "pt-4000",
+          "points": 4000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "SOCIAL_POINT",
+              "id": 2,
+              "amount": 100
+            }
+          ]
+        },
+        {
+          "id": "pt-5000",
+          "points": 5000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "LOVECA",
+              "id": 0,
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "id": "pt-6000",
+          "points": 6000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "GAME_COIN",
+              "id": 3,
+              "amount": 10000
+            }
+          ]
+        },
+        {
+          "id": "pt-7000",
+          "points": 7000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "SOCIAL_POINT",
+              "id": 2,
+              "amount": 200
+            }
+          ]
+        },
+        {
+          "id": "pt-8000",
+          "points": 8000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "GAME_COIN",
+              "id": 3,
+              "amount": 15000
+            }
+          ]
+        },
+        {
+          "id": "pt-9000",
+          "points": 9000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "SOCIAL_POINT",
+              "id": 2,
+              "amount": 300
+            }
+          ]
+        },
+        {
+          "id": "pt-10000",
+          "points": 10000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "UNIT",
+              "id": 89,
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "id": "pt-11000",
+          "points": 11000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "GAME_COIN",
+              "id": 3,
+              "amount": 20000
+            }
+          ]
+        },
+        {
+          "id": "pt-12000",
+          "points": 12000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "SOCIAL_POINT",
+              "id": 2,
+              "amount": 400
+            }
+          ]
+        },
+        {
+          "id": "pt-13000",
+          "points": 13000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "GAME_COIN",
+              "id": 3,
+              "amount": 25000
+            }
+          ]
+        },
+        {
+          "id": "pt-14000",
+          "points": 14000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "SOCIAL_POINT",
+              "id": 2,
+              "amount": 500
+            }
+          ]
+        },
+        {
+          "id": "pt-15000",
+          "points": 15000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "UNIT",
+              "id": 84,
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "id": "pt-16000",
+          "points": 16000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "SOCIAL_POINT",
+              "id": 2,
+              "amount": 750
+            }
+          ]
+        },
+        {
+          "id": "pt-17000",
+          "points": 17000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "LOVECA",
+              "id": 0,
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "id": "pt-18000",
+          "points": 18000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "SOCIAL_POINT",
+              "id": 2,
+              "amount": 750
+            }
+          ]
+        },
+        {
+          "id": "pt-19000",
+          "points": 19000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "GAME_COIN",
+              "id": 3,
+              "amount": 40000
+            }
+          ]
+        },
+        {
+          "id": "pt-20000",
+          "points": 20000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "LOVECA",
+              "id": 0,
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "id": "pt-21000",
+          "points": 21000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "SOCIAL_POINT",
+              "id": 2,
+              "amount": 1000
+            }
+          ]
+        },
+        {
+          "id": "pt-22000",
+          "points": 22000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "GAME_COIN",
+              "id": 3,
+              "amount": 50000
+            }
+          ]
+        },
+        {
+          "id": "pt-23000",
+          "points": 23000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "LOVECA",
+              "id": 0,
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "id": "pt-24000",
+          "points": 24000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "GAME_COIN",
+              "id": 3,
+              "amount": 60000
+            }
+          ]
+        },
+        {
+          "id": "pt-25000",
+          "points": 25000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "LOVECA",
+              "id": 0,
+              "amount": 2
+            }
+          ]
+        },
+        {
+          "id": "pt-27500",
+          "points": 27500,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "SOCIAL_POINT",
+              "id": 2,
+              "amount": 1000
+            }
+          ]
+        },
+        {
+          "id": "pt-30000",
+          "points": 30000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "LOVECA",
+              "id": 0,
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "id": "pt-35000",
+          "points": 35000,
+          "delivery": "direct",
+          "items": [
+            {
+              "type": "LOVECA",
+              "id": 0,
+              "amount": 3
+            }
+          ]
+        }
+      ],
+      "point_rank_rewards": [
+        {
+          "id": "point-1-3000",
+          "from": 1,
+          "to": 3000,
+          "items": [
+            {
+              "type": "UNIT",
+              "id": 84,
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "id": "point-3001-5000",
+          "from": 3001,
+          "to": 5000,
+          "items": [
+            {
+              "type": "ITEM",
+              "id": 1,
+              "amount": 1
+            },
+            {
+              "type": "UNIT",
+              "id": 89,
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "id": "point-5001-10000",
+          "from": 5001,
+          "to": 10000,
+          "items": [
+            {
+              "type": "ITEM",
+              "id": 1,
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "id": "point-10001-50000",
+          "from": 10001,
+          "to": 50000,
+          "items": [
+            {
+              "type": "LOVECA",
+              "id": 0,
+              "amount": 3
+            }
+          ]
+        },
+        {
+          "id": "point-50001-100000",
+          "from": 50001,
+          "to": 100000,
+          "items": [
+            {
+              "type": "LOVECA",
+              "id": 0,
+              "amount": 1
+            }
+          ]
+        }
+      ],
+      "score_rank_rewards": [
+        {
+          "id": "score-1-3000",
+          "from": 1,
+          "to": 3000,
+          "items": [
+            {
+              "type": "UNIT",
+              "id": 82,
+              "amount": 1
+            },
+            {
+              "type": "ITEM",
+              "id": 1,
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "id": "score-3001-10000",
+          "from": 3001,
+          "to": 10000,
+          "items": [
+            {
+              "type": "UNIT",
+              "id": 82,
+              "amount": 1
+            },
+            {
+              "type": "LOVECA",
+              "id": 0,
+              "amount": 3
+            }
+          ]
+        },
+        {
+          "id": "score-10001-50000",
+          "from": 10001,
+          "to": 50000,
+          "items": [
+            {
+              "type": "UNIT",
+              "id": 82,
+              "amount": 1
+            }
+          ]
+        }
+      ],
+      "historical_sources": [
+        "https://w.atwiki.jp/lovelive-sif/pages/47.html",
+        "https://lovelive.inven.co.kr/dataninfo/event/list.php"
+      ],
+      "rule_origin": "2013-05-21 FIRST edition community reward archive, not July again and not an official server dump. Dates, cheer, later charts, token quotas and multipliers are private-server test rules."
+    }
+  ],
+  "selected_period_key": "sif005-love-heart-history-20261109-r1",
+  "selection_note": "Test-only manual selection. Non-selected periods retain dates, rules, progress, saved live snapshots and original ranking settlement dates; no early finalization.",
+  "normal_live_rewards": {
+    "revision": "historical-base-lp-v1",
+    "tokens_by_base_lp": {
+      "5": 5,
+      "10": 10,
+      "15": 16,
+      "25": 27
+    },
+    "include_master_challenge": true,
+    "basis": "2013 Love*Heart community archive: base LP <=14 => same token count, 15 =>16, 25 =>27. Modern MASTER Challenge is a compatibility extension for this historical event. LP discount does not reduce the base chart quota; lp_factor scales successful token hits once. Existing cheer scope remains a private-server rule.",
+    "source": "https://w.atwiki.jp/lovelive-sif/pages/47.html"
+  },
+  "event_live_rewards": {
+    "revision": "late-token-pt-20261111-v1",
+    "rule_origin": "historical-parameters-and-user-table-reconstruction",
+    "rounding": "half-up-per-play-before-multiplier",
+    "evidence": {
+      "parameters": "https://sachi-web.com/libs/schfes-play-data.js",
+      "expert_master_table": "https://llwiki.org/zh/道具收集",
+      "rounding": "User supplied EX/MASTER table: all 50 entries match integer half-up. Public calculator uses floor and disagrees; do not copy its rounding.",
+      "easy_normal_hard": "Derived from late calculator parameters using the rounding verified against user EX/MASTER table; no complete original-server table located.",
+      "cheer": "Existing private-server cheer composition/percent retained; half-up applied to the full rank/cheer product once, then play multiplier. Original cheer fractional-boundary capture unavailable."
+    },
+    "difficulties": {
+      "1": {
+        "base_point": 58,
+        "score_percent": [
+          114,
+          112,
+          110,
+          105,
+          100
+        ],
+        "combo_percent": [
+          110,
+          106,
+          104,
+          102,
+          100
+        ]
+      },
+      "2": {
+        "base_point": 117,
+        "score_percent": [
+          118,
+          114,
+          110,
+          105,
+          100
+        ],
+        "combo_percent": [
+          112,
+          108,
+          104,
+          102,
+          100
+        ]
+      },
+      "3": {
+        "base_point": 198,
+        "score_percent": [
+          120,
+          115,
+          110,
+          105,
+          100
+        ],
+        "combo_percent": [
+          114,
+          110,
+          104,
+          102,
+          100
+        ]
+      },
+      "4": {
+        "base_point": 410,
+        "score_percent": [
+          122,
+          116,
+          110,
+          105,
+          100
+        ],
+        "combo_percent": [
+          116,
+          112,
+          104,
+          102,
+          100
+        ]
+      },
+      "6": {
+        "base_point": 533,
+        "score_percent": [
+          126,
+          118,
+          110,
+          105,
+          100
+        ],
+        "combo_percent": [
+          118,
+          114,
+          104,
+          102,
+          100
+        ]
+      }
+    }
+  }
+}
