@@ -15,7 +15,6 @@ import sqlalchemy.exc
 import sqlalchemy.orm
 
 import scripts.migrate_to_postgresql as migration
-import scripts.migrate_to_postgresql_without_legacy as temporary_migration
 
 
 def create_source(path: pathlib.Path) -> None:
@@ -173,66 +172,6 @@ class MigrationSchemaTest(unittest.TestCase):
             self.assertEqual(
                 source.execute("SELECT seq FROM sqlite_sequence WHERE name='destiny_mail'").fetchone(), (91,)
             )
-
-
-class TemporaryMigrationTest(unittest.TestCase):
-    def setUp(self) -> None:
-        directory = pathlib.Path(self.enterContext(tempfile.TemporaryDirectory()))
-        self.source_path = directory / "source.sqlite3"
-        self.snapshot_path = directory / "snapshot.sqlite3"
-        create_source(self.source_path)
-        self.source = self.enterContext(contextlib.closing(sqlite3.connect(self.source_path)))
-        self.source.executescript(
-            "CREATE TABLE codex_test_inventory_grant(grant_key TEXT PRIMARY KEY, user_id INTEGER REFERENCES user(id));"
-            "INSERT INTO codex_test_inventory_grant VALUES ('grant', 7);"
-            "CREATE TABLE maintenance_fix_receipt(fix_key TEXT PRIMARY KEY);"
-            "INSERT INTO maintenance_fix_receipt VALUES ('fix');"
-            "CREATE TABLE destiny_daily_friend_scout(account_uid TEXT, day_jst INTEGER, claimed_at_utc INTEGER);"
-            "INSERT INTO destiny_scout_account VALUES (7, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');"
-            "INSERT INTO daily_friend_scout VALUES (7, 1, 99);"
-            "INSERT INTO destiny_daily_friend_scout VALUES ('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 1, 99);"
-        )
-        self.metadata = migration.model_metadata()
-        head = alembic.script.ScriptDirectory.from_config(migration.migration_config()).get_current_head()
-        assert head is not None
-        self.head = head
-
-    def test_only_the_snapshot_loses_excluded_tables_and_original_validation_stays_strict(self) -> None:
-        original = self.source_path.read_bytes()
-        with self.assertRaisesRegex(ValueError, "unknown="):
-            migration.validate_schema(self.source, self.metadata, self.head)
-        temporary_migration.prepare_snapshot(self.source_path, self.snapshot_path)
-        self.assertEqual(self.source_path.read_bytes(), original)
-        with contextlib.closing(sqlite3.connect(self.snapshot_path)) as snapshot:
-            migration.validate_schema(snapshot, self.metadata, self.head)
-            for table in self.metadata.sorted_tables:
-                self.assertEqual(
-                    migration.source_summary(snapshot, table), migration.source_summary(self.source, table)
-                )
-
-    def test_other_unknown_tables_are_still_rejected(self) -> None:
-        self.source.execute("CREATE TABLE unexpected_table(id INTEGER PRIMARY KEY)")
-        self.source.commit()
-        temporary_migration.prepare_snapshot(self.source_path, self.snapshot_path)
-        with (
-            contextlib.closing(sqlite3.connect(self.snapshot_path)) as snapshot,
-            self.assertRaisesRegex(ValueError, "unknown=.*unexpected_table"),
-        ):
-            migration.validate_schema(snapshot, self.metadata, self.head)
-
-    def test_uncovered_legacy_quotas_are_rejected(self) -> None:
-        self.source.execute("UPDATE daily_friend_scout SET claimed_at_utc = 100")
-        self.source.commit()
-        with self.assertRaisesRegex(ValueError, "1 records lack matching quotas"):
-            temporary_migration.prepare_snapshot(self.source_path, self.snapshot_path)
-
-    def test_retained_foreign_keys_to_excluded_tables_are_rejected(self) -> None:
-        self.source.execute(
-            "CREATE TABLE retained(id INTEGER PRIMARY KEY, grant_key TEXT REFERENCES codex_test_inventory_grant(grant_key))"
-        )
-        self.source.commit()
-        with self.assertRaisesRegex(ValueError, "referenced by retained"):
-            temporary_migration.prepare_snapshot(self.source_path, self.snapshot_path)
 
 
 @unittest.skipUnless(
