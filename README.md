@@ -155,22 +155,55 @@ Otherwise, install the additional dependencies depending on which backend you wa
 Running
 -----
 
-After all is set, initialize the database:
+From the project directory, run the server. The command upgrades the database and applies data fixes before serving requests.
+```sh
+python -m npps4 run --host 0.0.0.0 --port 51376
+```
+
+For a multi-worker deployment, run the migrations and data fixes before launching Gunicorn. Event home ZIP
+acknowledgments are held in worker memory. Use a single worker or keep each client session on the same worker
+when event client resources are enabled.
 ```sh
 alembic upgrade head
-```
-
-Then run the server
-```sh
-uvicorn npps4.run.app:main --port 51376 --host <your lan IP or 0.0.0.0>
-```
-
-If you need to run with multiple workers, you must additionally install `gunicorn` and `uvicorn-worker` Python package.
-```sh
+python -m npps4 script apply_fixes
 pip install gunicorn uvicorn-worker # only needs to be done once
 
 gunicorn --preload npps4.run.app:main -w 4 -k uvicorn_worker.UvicornWorker -b <your lan IP or 0.0.0.0>:51376
 ```
+
+Private-server gameplay
+-----
+
+To carry over the extension launcher's gameplay settings, merge these entries into your existing `[gameplay]` section.
+The event settings enable the bundled Marathon rules and client resources. Omit them for deployments that previously
+had activity disabled.
+
+```toml
+[gameplay]
+game_day_offset_minutes = 240
+random_live_rotation_anchor = 1794254400
+master_challenge_daily_limit = 10
+daily_friend_scout = true
+scout_audit = true
+friend_mail = true
+daily_clear_required_groups = { "20010015" = 13, "20010016" = 113 }
+daily_clear_bonus_loveca = { "20010015" = 1, "20010016" = 1, "20010017" = 1 }
+block_fragment_achievement_claims = true
+starter_unit_numbers = [937, 938, 939, 940, 941, 942, 943, 944, 945, 946, 947, 948, 949, 950, 951, 952, 953, 954]
+starter_post_tutorial_gold = 1000000
+reward_egg_policy = "resources/events/reward_egg_policy.json"
+marathon_policy = "resources/events/marathon_rules.json"
+event_client_resources = true
+```
+
+For retro scouting artwork, set `backend = "custom"` under `[download]` and
+`file = "external/retro_scouting_download.py"` under `[download.custom]`. The provider uses your
+`[download.n4dlapi]` settings for upstream files and client databases.
+
+Before switching the running service, back up the deployment database and rehearse startup on a copy.
+Point a separate config file at the copy, then run
+`NPPS4_CONFIG=rehearsal.toml python -m npps4 run --host 127.0.0.1 --port 51400`.
+After verifying the rehearsal, configure the service to use the normal run command with its existing host and port.
 
 Updating
 -----
@@ -191,6 +224,8 @@ Update existing configuration entries that point to the bundled JSON files to us
 | Setting | Bundled file |
 | --- | --- |
 | `server_data` | `resources/server_data.json` |
+| `marathon_policy` | `resources/events/marathon_rules.json` |
+| `reward_egg_policy` | `resources/events/reward_egg_policy.json` |
 
 If you customized the bundled server data, carry those edits into its new location before restarting.
 Keep pointing to your deployment's own data files if you configured separate paths such as `data/server_data.json`.
