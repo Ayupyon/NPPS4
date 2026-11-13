@@ -1,4 +1,5 @@
 import calendar
+import datetime
 
 import pydantic
 import sqlalchemy
@@ -9,6 +10,16 @@ from .. import const
 from .. import idol
 from ..config import config
 from ..db import main
+
+_LOGIN_BONUS_EPOCH = datetime.date(1970, 1, 1)
+_LOGIN_BONUS_ROTATION = ((3000, 3, 20000, None), (3002, 2, 2500, None), (3001, 4, 1, None))
+
+
+async def get_rewards(
+    day: int, month: int, year: int, context: idol.BasicSchoolIdolContext
+) -> tuple[int, int, int, tuple[str, str | None] | None]:
+    days_since_epoch = (datetime.date(year, month, day) - _LOGIN_BONUS_EPOCH).days
+    return _LOGIN_BONUS_ROTATION[days_since_epoch % len(_LOGIN_BONUS_ROTATION)]
 
 
 class LoginBonusCalendar(pydantic.BaseModel):

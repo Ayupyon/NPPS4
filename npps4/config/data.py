@@ -89,7 +89,7 @@ class _Download(pydantic.BaseModel):
 class _Game(pydantic.BaseModel):
     badwords: str = ""
     login_bonus: Annotated[str, pydantic.Field(validation_alias=pydantic.AliasChoices("login_bonus", "loginbonus"))] = (
-        "external/login_bonus.py"
+        ""
     )
     beatmaps: str = "external/beatmap.py"
     live_unit_drop: Annotated[

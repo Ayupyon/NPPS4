@@ -118,17 +118,24 @@ def load_module_from_file(file: str, modulename: str):
     return types.SimpleNamespace(**runpy.run_path(file))
 
 
-_LOGIN_BONUS_FILE = os.path.join(ROOT_DIR, CONFIG_DATA.game.login_bonus)
-_login_bonus_module = cast(cfgtype.LoginBonusProtocol, load_module_from_file(_LOGIN_BONUS_FILE, "external.login_bonus"))
+_login_bonus_module: cfgtype.LoginBonusProtocol | None = None
 
 
 def get_login_bonus_protocol():
     global _login_bonus_module
+
+    if _login_bonus_module is None:
+        if filename := CONFIG_DATA.game.login_bonus:
+            _login_bonus_module = load_module_from_file(os.path.join(ROOT_DIR, filename), "external.login_bonus")
+        else:
+            from ..system import lbonus
+
+            _login_bonus_module = lbonus
+
     return _login_bonus_module
 
 
-BADWORDS_CHECK_FILE = os.path.join(ROOT_DIR, CONFIG_DATA.game.badwords)
-_badwords_check_module = None
+_badwords_check_module: cfgtype.BadwordsCheckProtocol | None = None
 
 
 async def contains_badwords(string: str, context: "idol.BasicSchoolIdolContext") -> bool:

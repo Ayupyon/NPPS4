@@ -161,7 +161,7 @@ badwords = ""
 # Path is relative to the project root directory.
 # Note: The file path is not configurable in Android.
 # Environment Variable: NPPS4_CONFIG_GAME_LOGINBONUS
-login_bonus = "external/login_bonus.py"
+login_bonus = ""
 
 # Specify beatmap provider script.
 # Path is relative to the project root directory.
