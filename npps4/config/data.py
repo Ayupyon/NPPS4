@@ -135,6 +135,7 @@ class _Gameplay(pydantic.BaseModel):
     master_challenge_daily_limit: pydantic.PositiveInt | None = None
     daily_clear_required_groups: dict[int, int] = pydantic.Field(default_factory=dict)
     daily_clear_bonus_loveca: dict[int, pydantic.NonNegativeInt] = pydantic.Field(default_factory=dict)
+    block_fragment_achievement_claims: bool = False
     starter_unit_numbers: list[pydantic.PositiveInt] = pydantic.Field(default_factory=list)
     starter_post_tutorial_gold: pydantic.NonNegativeInt | None = None
     energy_multiplier: Annotated[

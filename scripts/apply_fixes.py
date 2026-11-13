@@ -20,6 +20,7 @@ import npps4.db.scenario
 import npps4.db.subscenario
 import npps4.db.unit
 import npps4.idol
+import npps4.system.achievement_claim_migration
 
 from typing import Callable, TypedDict, cast
 
@@ -172,6 +173,9 @@ async def run_script(arg: list[str]):
     revisions = load_fixes_script()
 
     await run_apply(revisions, args.echo)
+    # Historical reset types must be corrected before assigning claim periods
+    async with npps4.idol.BasicSchoolIdolContext() as context:
+        await npps4.system.achievement_claim_migration.apply(context)
 
 
 if __name__ == "__main__":

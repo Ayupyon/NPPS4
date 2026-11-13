@@ -225,6 +225,69 @@ class Achievement(common.Base, kw_only=True):
     __table_args__ = (sqlalchemy.UniqueConstraint(achievement_id, user_id),)
 
 
+_claim_key_type = sqlalchemy.Text().with_variant(
+    sqlalchemy.dialects.mysql.VARCHAR(255, collation="utf8mb4_bin"), "mysql", "mariadb"
+)
+_claim_json_type = sqlalchemy.Text().with_variant(sqlalchemy.dialects.mysql.LONGTEXT(), "mysql", "mariadb")
+
+
+class DestinyAchievementClaim(common.Base, kw_only=True):
+    user_id: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(
+        common.IDInteger, sqlalchemy.ForeignKey(User.id, ondelete="CASCADE"), primary_key=True
+    )
+    achievement_id: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(common.IDInteger, primary_key=True)
+    period_key: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(_claim_key_type, primary_key=True)
+    owning_achievement_id: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(common.IDInteger)
+    claimed_at: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(common.IDInteger)
+    request_key: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(_claim_key_type)
+    rewards_json: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(_claim_json_type, default="[]")
+
+
+class DestinyAchievementClaimReceipt(common.Base, kw_only=True):
+    user_id: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(
+        common.IDInteger, sqlalchemy.ForeignKey(User.id, ondelete="CASCADE"), primary_key=True
+    )
+    action: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(sqlalchemy.String(32), primary_key=True)
+    request_key: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(_claim_key_type, primary_key=True)
+    payload_hash: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(sqlalchemy.String(64))
+    response_json: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(_claim_json_type)
+
+
+class DestinyAchievementClaimReview(common.Base, kw_only=True):
+    user_id: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(
+        common.IDInteger, sqlalchemy.ForeignKey(User.id, ondelete="CASCADE"), primary_key=True
+    )
+    achievement_id: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(common.IDInteger, primary_key=True)
+    blocked_period: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(_claim_key_type, primary_key=True)
+    owning_achievement_id: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(common.IDInteger)
+    reason: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column()
+    evidence_json: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(_claim_json_type)
+    created_at: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(common.IDInteger)
+    resolved_at: sqlalchemy.orm.Mapped[int | None] = sqlalchemy.orm.mapped_column(common.IDInteger, default=None)
+
+
+class DestinyAchievementClaimMigration(common.Base, kw_only=True):
+    migration_key: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(_claim_key_type, primary_key=True)
+    applied_at: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(common.IDInteger)
+    report_json: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(_claim_json_type)
+
+
+class DestinyAchievementClaimReviewDecision(common.Base, kw_only=True):
+    user_id: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(
+        common.IDInteger, sqlalchemy.ForeignKey(User.id, ondelete="CASCADE"), primary_key=True
+    )
+    achievement_id: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(common.IDInteger, primary_key=True)
+    blocked_period: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(_claim_key_type, primary_key=True)
+    plan_hash: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(sqlalchemy.String(64))
+    decision: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(sqlalchemy.String(16))
+    approved_by: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column()
+    evidence: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column()
+    plan_json: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(_claim_json_type)
+    applied_at: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(common.IDInteger)
+
+    __table_args__ = (sqlalchemy.CheckConstraint("decision IN ('confirm_paid', 'allow_retry')"),)
+
+
 class LoginBonus(common.Base, kw_only=True):
     id: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(common.IDInteger, init=False, primary_key=True)
     user_id: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(

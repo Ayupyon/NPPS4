@@ -25,7 +25,7 @@ from ..db import achievement
 from ..db import main
 from ..idol import database
 
-from typing import Any
+from typing import Any, cast
 
 ACHIEVEMENT_REWARD_DEFAULT = [item.base_loveca(1)]
 
@@ -1544,6 +1544,43 @@ async def get_accomplished_achievements_by_filter_id(
 
 async def mark_achievement_reward_claimed(context: idol.BasicSchoolIdolContext, ach: main.Achievement):
     ach.is_reward_claimed = True
+
+
+async def get_achievement_reward_info(context: idol.BasicSchoolIdolContext, ach: main.Achievement, timestamp: int):
+    info = await get_achievement_info(context, ach.achievement_id)
+    if (
+        info.auto_reward_flag
+        or info.reset_type != ach.reset_type
+        or timestamp < util.datetime_to_timestamp(info.start_date)
+        or (info.end_date is not None and timestamp >= util.datetime_to_timestamp(info.end_date))
+        or (ach.end_date and timestamp >= ach.end_date)
+    ):
+        return None
+
+    if ach.reset_type == 1 and ach.reset_value != util.get_days_since_unix(timestamp):
+        return None
+    return info
+
+
+async def reserve_achievement_reward(
+    context: idol.BasicSchoolIdolContext, user: main.User, ach: main.Achievement, timestamp: int
+):
+    info = await get_achievement_reward_info(context, ach, timestamp)
+    if info is None:
+        return None
+
+    query = (
+        sqlalchemy.update(main.Achievement)
+        .where(
+            main.Achievement.id == ach.id,
+            main.Achievement.user_id == user.id,
+            main.Achievement.is_accomplished.is_(True),
+            main.Achievement.is_reward_claimed.is_(False),
+        )
+        .values(is_reward_claimed=True)
+    )
+    result = cast(sqlalchemy.engine.CursorResult, await context.db.main.execute(query))
+    return info if result.rowcount == 1 else None
 
 
 async def get_achievement_count(
