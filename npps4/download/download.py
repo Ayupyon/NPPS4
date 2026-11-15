@@ -4,6 +4,7 @@ import fastapi
 
 from . import dltype
 from . import event_presentation
+from . import master_overlay
 from . import none as none_backend
 from .. import idoltype
 from ..config import config, cfgtype
@@ -46,7 +47,14 @@ def get_server_version():
 def get_db_path(name: str):
     global CURRENT_BACKEND
     assert CURRENT_BACKEND is not None
-    return CURRENT_BACKEND.get_db_path(name)
+    source = CURRENT_BACKEND.get_db_path(name)
+    if name == "live" and get_server_version() == (59, 4):
+        return master_overlay.prepare_live_database(
+            source,
+            pathlib.Path(config.ROOT_DIR) / "resources/master-overlays/live-59.4.json",
+            pathlib.Path(config.get_data_directory()) / "master-overlays",
+        )
+    return source
 
 
 async def get_update_files(

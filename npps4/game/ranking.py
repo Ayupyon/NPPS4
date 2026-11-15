@@ -21,8 +21,9 @@ class RankingLiveRequest(PageableMixin):
 
 class RankingPlayerRequest(PageableMixin):
     id: int = 0  # if nonzero, get current player position
-    term: int  # Always 1
-    daily_index: int  # 1 = today, 2 = yesterday
+    term: int = 1  # Always 1
+    daily_index: int = 1  # 1 = today, 2 = yesterday
+    rank: int | None = None
 
 
 class RankingUserData(pydantic.BaseModel):
@@ -49,10 +50,15 @@ class RankingResponse(common.TimestampMixin, PageableMixin):
 @idol.register("ranking", "live")
 async def ranking_live(context: idol.SchoolIdolUserParams, request: RankingLiveRequest) -> RankingResponse:
     current_user = await user.get_current(context)
+    if request.page < 0:
+        raise idol.error.by_code(idol.error.ERROR_CODE_OUT_OF_RANG)
     total_cnt, player_scores = await ranking.get_live_ranking(context, request.live_difficulty_id, request.page)
 
+    if request.page > 0 and request.page * ranking.QUERY_PER_PAGE >= total_cnt:
+        raise idol.error.by_code(idol.error.ERROR_CODE_OUT_OF_RANG)
+
     rank_player_scores: list[RankingData] = []
-    for i, (user_id, score) in enumerate(player_scores, 1):
+    for i, (user_id, score) in enumerate(player_scores, request.page * ranking.QUERY_PER_PAGE + 1):
         # TODO: Deduplicate with partyInfo code
         target_user = await user.get(context, user_id)
         if target_user is None:
@@ -109,7 +115,15 @@ async def ranking_live(context: idol.SchoolIdolUserParams, request: RankingLiveR
 @idol.register("ranking", "player", xmc_verify=idol.XMCVerifyMode.SHARED_OR_CROSS)
 async def ranking_player(context: idol.SchoolIdolUserParams, request: RankingPlayerRequest) -> RankingResponse:
     current_user = await user.get_current(context)
-    page = request.page
+    if (
+        request.page < 0
+        or request.id < 0
+        or request.term != 1
+        or request.daily_index not in (1, 2)
+        or (request.rank is not None and request.rank < 1)
+    ):
+        raise idol.error.by_code(idol.error.ERROR_CODE_OUT_OF_RANG)
+    page = (request.rank - 1) // ranking.QUERY_PER_PAGE if request.rank is not None else request.page
 
     if request.id > 0:
         result = await ranking.get_daily_ranking_by_user(context, request.id, request.daily_index == 2)
@@ -123,10 +137,21 @@ async def ranking_player(context: idol.SchoolIdolUserParams, request: RankingPla
 
     total_count = await ranking.count_daily_ranking(context, request.daily_index == 2)
 
+    if total_count == 0:
+        return RankingResponse(
+            page=0,
+            rank=None,
+            items=[],
+            total_cnt=0,
+            present_cnt=await reward.count_presentbox(context, current_user),
+        )
+    if page * ranking.QUERY_PER_PAGE >= total_count:
+        raise idol.error.by_code(idol.error.ERROR_CODE_OUT_OF_RANG)
+
     items: list[RankingData] = []
     current_rank: int | None = None
 
-    for i, rank in enumerate(rankings, request.page * 20 + 1):
+    for i, rank in enumerate(rankings, page * ranking.QUERY_PER_PAGE + 1):
         target_user = await user.get(context, rank.user_id)
         if target_user is None:
             continue
@@ -172,9 +197,6 @@ async def ranking_player(context: idol.SchoolIdolUserParams, request: RankingPla
                 setting_award_id=target_user.active_award,
             )
         )
-
-    if len(items) == 0:
-        raise idol.error.by_code(idol.error.ERROR_CODE_OUT_OF_RANG)
 
     return RankingResponse(
         page=page,

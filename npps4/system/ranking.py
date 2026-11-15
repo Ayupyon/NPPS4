@@ -5,6 +5,7 @@ import sqlalchemy
 from .. import idol
 from .. import util
 from ..db import main
+from ..idol import database
 
 QUERY_PER_PAGE = 20
 
@@ -23,7 +24,7 @@ async def get_live_ranking(context: idol.BasicSchoolIdolContext, live_difficulty
         q = (
             sqlalchemy.select(main.LiveClear)
             .where(main.LiveClear.live_difficulty_id == live_difficulty_id, main.LiveClear.clear_cnt > 0)
-            .order_by(main.LiveClear.hi_score.desc())
+            .order_by(main.LiveClear.hi_score.desc(), main.LiveClear.user_id.asc())
             .limit(QUERY_PER_PAGE)
             .offset(page * QUERY_PER_PAGE)
         )
@@ -50,6 +51,10 @@ async def try_cleanup_daily_rankings(current_day_index: int):
 
 
 async def increment_daily_score(context: idol.BasicSchoolIdolContext, user: main.User, inc_score: int):
+    if inc_score < 0:
+        raise ValueError("Daily score increment cannot be negative")
+    if not await database.lock_user(context.db.main, user.id):
+        raise ValueError("Ranking account does not exist")
     current_day_index = util.get_days_since_unix()
 
     if context.support_background_task():
@@ -58,7 +63,7 @@ async def increment_daily_score(context: idol.BasicSchoolIdolContext, user: main
     q = sqlalchemy.select(main.PlayerRanking).where(
         main.PlayerRanking.user_id == user.id, main.PlayerRanking.day == current_day_index
     )
-    player_score = (await context.db.main.execute(q)).scalar()
+    player_score = (await context.db.main.execute(q.execution_options(populate_existing=True))).scalar()
 
     if player_score is None:
         player_score = main.PlayerRanking(user_id=user.id, day=current_day_index, score=0)
@@ -114,21 +119,11 @@ async def get_daily_ranking_by_user(context: idol.BasicSchoolIdolContext, user_i
         main.PlayerRanking.day == day_index,
         (
             (main.PlayerRanking.score > target.score)
-            | ((main.PlayerRanking.score == target.score) & (main.PlayerRanking.id < target.id))
+            | ((main.PlayerRanking.score == target.score) & (main.PlayerRanking.user_id < target.user_id))
         ),
     )
     result = await context.db.main.execute(q)
     players_before = result.scalar() or 0
 
     page_index = players_before // 20
-    page_offset = page_index * 20
-
-    q = (
-        sqlalchemy.select(main.PlayerRanking)
-        .where(main.PlayerRanking.day == day_index)
-        .order_by(main.PlayerRanking.score.desc(), main.PlayerRanking.id.asc())
-        .offset(page_offset)
-        .limit(20)
-    )
-    result = await context.db.main.execute(q)
-    return result.scalars().all(), page_index
+    return await get_daily_ranking(context, page_index, yesterday), page_index

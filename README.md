@@ -238,6 +238,27 @@ Keep pointing to your deployment's own data files if you configured separate pat
 Most changes requires a server restart. However, changes that only touch `server_data.json` does not require server
 restart as that particular file is hot-reloaded by the server.
 
+Local 59.4 reference data and retry fixes
+-----
+
+The server loads the versioned `resources/master-overlays/live-59.4.json` when its download backend provides the
+59.4 live database. This restores the deployed local daily MASTER selection (14 songs; 106 removed rotation rows)
+and the missing 2,868 song-goal rewards across 239 charts. It creates an independently verified database under
+`data/master-overlays/`, keyed by the source and patch contents. Download originals and the player database are
+not edited. Conflicting customized rows stop loading instead of being overwritten. Repeated loading reuses the
+verified copy; another master-data version is not patched. Do not use a raw `data/db/59.4/live.db_` row count to
+judge the active result: the database loader returns the patched copy.
+
+A normal server restart loads these reference changes and the tutorial/ranking code. This repository change does
+not restart an existing process, migrate player tables, or compensate historical rewards. Keep any ongoing live
+settlement recovery work and its matching client patch intact when scheduling that restart.
+
+Personal rankings use the same tie order for lists and own-position lookup, honor rank jumps and page offsets,
+and return a successful empty list for an empty daily ranking. Tutorial progress and skip requests serialize per
+account; completed phases are successful no-ops. Phase rewards and state changes share a savepoint so a failed
+phase can be retried without retaining a partial award. Both use the existing SQLite/PostgreSQL account lock;
+no new player tables or columns are required.
+
 Client App
 -----
 

@@ -44,6 +44,8 @@ class LocalOperationsTest(unittest.IsolatedAsyncioTestCase):
             (pathlib.Path(config.ROOT_DIR) / "resources/events/marathon_rules.json").read_text(encoding="utf-8")
         )
         rule = copy.deepcopy(settlement.rule_for(policy, policy["selected_period_key"]))
+        # Keep the pre-settlement fixture independent of the deployed event schedule.
+        rule.update(end="2026-12-09T00:00:00Z", settlement_grace_seconds=900)
         rule["minimum_reward_points"] = rule["minimum_reward_clears"] = 1
         rule["point_rank_rewards"] = [
             {"id": "point-test", "from": 1, "to": 3, "items": [{"type": "GAME_COIN", "id": 3, "amount": 10}]}
