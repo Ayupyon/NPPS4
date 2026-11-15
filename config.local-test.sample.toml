@@ -1,0 +1,90 @@
+# 当前 Test 服的可共享配置快照（2026-11-14）。
+# 配置含玩法、活动、好友和抽卡资源设置；不含玩家数据与本机凭据。
+# 详细字段说明见 config.sample.toml；此文件不会自动被服务加载。
+# 新部署：复制为 config.toml，填写自己的 secret_key 和 database.url。
+# 已有部署：合并所需玩法设置，保留自己的数据库连接、密钥和数据目录。
+# PostgreSQL 驱动：python -m pip install "psycopg[binary]"
+# 启动：python -m npps4 run --host 127.0.0.1 --port 51376
+# Cloudflare（已安装）：cloudflared tunnel --url http://127.0.0.1:51376
+# 临时公网 URL 由每次启动的隧道产生，不写入此共享配置。
+# 使用已有玩家库时，先核对已发布的活动周期与规则，勿重置或重新导入玩家库。
+# 当前活动规则保留既有日期，不会自动开新活动；日替与课题曲库补丁随仓库加载。
+# 本文件只同步配置，未提交的本地结算修复和配套客户端补丁不在此快照内。
+
+
+# secret_key 必须替换。默认协议私钥沿用仓库已有示例；自定义密钥须与客户端匹配。
+[main]
+data_directory = "data"
+secret_key = "REPLACE_WITH_YOUR_OWN_RANDOM_SECRET"
+server_private_key = "default_server_key.pem"
+server_private_key_password = ""
+server_data = "resources/server_data.json"
+session_expiry = 259200
+save_notes_list = false
+
+# 使用自己的 PostgreSQL 数据库；URL 中特殊字符需要 URL 编码。不要使用他人的玩家库。
+[database]
+url = "postgresql+psycopg://YOUR_DB_USER:YOUR_DB_PASSWORD@127.0.0.1:5432/YOUR_DB_NAME"
+
+
+[download]
+backend = "custom"
+send_patched_server_info = true
+
+
+[download.none]
+client_version = "59.4"
+
+# 沿用当前服使用的公开资源服务；部署方可换成自己的兼容服务。
+[download.n4dlapi]
+server = "https://ll.sif.moe/npps4_dlapi"
+shared_key = ""
+
+
+[download.internal]
+archive_root = "archive-root"
+
+
+[download.custom]
+file = "external/retro_scouting_download.py"
+
+
+[game]
+badwords = ""
+login_bonus = ""
+beatmaps = ""
+live_unit_drop = ""
+live_box_drop = ""
+
+# 北京时间 04:00 切日；新账号初始卡与金币仅用于创建/教程，不改写已有玩家。
+[gameplay]
+game_day_offset_minutes = 240
+random_live_rotation_anchor = 1794254400
+master_challenge_daily_limit = 10
+daily_friend_scout = true
+scout_audit = true
+friend_mail = true
+daily_clear_required_groups = { "20010015" = 13, "20010016" = 113 }
+daily_clear_bonus_loveca = { "20010015" = 1, "20010016" = 1, "20010017" = 1 }
+block_fragment_achievement_claims = true
+starter_unit_numbers = [937, 938, 939, 940, 941, 942, 943, 944, 945, 946, 947, 948, 949, 950, 951, 952, 953, 954]
+starter_post_tutorial_gold = 1000000
+reward_egg_policy = "resources/events/reward_egg_policy.json"
+marathon_policy = "resources/events/marathon_rules.json"
+event_client_resources = true
+energy_multiplier = 1
+love_multiplier = 1
+secretbox_cost_multiplier = 1
+
+
+[iex]
+enable_export = true
+enable_import = false
+bypass_signature = false
+
+# 与仓库默认样例一致的客户端协议参数。
+[advanced]
+base_xorpad = "eit4Ahph4aiX4ohmephuobei6SooX9xo"
+application_key = "b6e6c940a93af2357ea3e0ace0b98afc"
+consumer_key = "lovelive_test"
+verify_xmc = true

@@ -78,6 +78,17 @@ Before starting the server, you need 3 things:
 Copy out `config.sample.toml` to `config.toml` and adjust as needed. The file has extensive comments on each
 configuration values.
 
+To reproduce the current local Test gameplay settings, use
+[`config.local-test.sample.toml`](config.local-test.sample.toml). It includes the active daily-song, achievement,
+starter-account, friend, Marathon, reward-egg and custom-download settings. Fill in your own database URL and
+server secret before using it; the public resource-service URL is included. Install `psycopg[binary]` for the
+PostgreSQL example. Existing deployments should merge the desired settings while keeping their own database,
+keys and data paths. Check published event rules against the existing database before changing event settings.
+This configuration snapshot does not contain player data or locally pending settlement/client-patch changes.
+The daily MASTER/song-goal, ranking and tutorial fixes are included in commit `c51a861` and later.
+The normal startup command is `python -m npps4 run --host 127.0.0.1 --port 51376`; an optional separate terminal
+can run `cloudflared tunnel --url http://127.0.0.1:51376` with an installed Cloudflare client.
+
 ### Get private key.
 
 > [!WARNING]
